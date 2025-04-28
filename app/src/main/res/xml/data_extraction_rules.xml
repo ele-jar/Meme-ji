@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<data-extraction-rules>
+    <cloud-backup>
+        
+         <exclude domain="sharedpref" path="MemeFavorites.xml"/>
+         <exclude domain="file" path="meme_bundles"/>
+    </cloud-backup>
+    <device-transfer>
+        
+         <exclude domain="sharedpref" path="MemeFavorites.xml"/>
+         <exclude domain="file" path="meme_bundles"/>
+    </device-transfer>
+</data-extraction-rules>
