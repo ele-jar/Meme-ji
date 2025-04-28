@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/imageViewDialogMeme"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:scaleType="fitCenter"
+        android:minHeight="200dp"
+        android:layout_marginBottom="12dp"
+        app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Medium"
+        tools:srcCompat="@drawable/ic_placeholder_image" />
+
+    <TextView
+        android:id="@+id/textViewDialogMemeName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?attr/textAppearanceTitleMedium"
+        android:gravity="center_horizontal"
+        android:layout_marginBottom="16dp"
+        tools:text="Meme Name Here" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/buttonDialogDownload"
+            style="?attr/materialButtonOutlinedStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:text="@string/download"
+            app:icon="@drawable/ic_download" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/buttonDialogShare"
+            style="?attr/materialButtonOutlinedStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:text="@string/share"
+            app:icon="@drawable/ic_share" />
+
+         <com.google.android.material.button.MaterialButton
+             android:id="@+id/buttonDialogOpenBrowser"
+             style="?attr/materialButtonOutlinedStyle"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:layout_marginBottom="8dp"
+             android:text="@string/open_in_browser"
+             app:icon="@drawable/ic_open_in_browser" />
+
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/buttonDialogBack"
+            style="?attr/materialButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/back"
+            app:icon="@drawable/ic_arrow_back" />
+    </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/progressBarDialogShare"
+        style="?android:attr/progressBarStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        android:layout_marginTop="8dp"
+        tools:visibility="visible"/>
+
+    <TextView
+        android:id="@+id/textViewDialogShareStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        android:layout_marginTop="4dp"
+        tools:text="Preparing image..."
+        tools:visibility="visible"/>
+
+</LinearLayout>
