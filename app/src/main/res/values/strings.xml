@@ -1,0 +1,99 @@
+<resources>
+    
+    <string name="app_name">Memes Ji</string>
+    <string name="home">Home</string>
+    <string name="categories">Categories</string>
+    <string name="more">More</string>
+    <string name="search_hint">Search memes...</string>
+    <string name="search_categories_hint">Search categories...</string>
+    <string name="no_memes_found">No memes found. Try refreshing!</string>
+    <string name="no_categories_found">No categories found. Check your connection.</string>
+    <string name="no_memes_match_search">No memes found matching \"%1$s\"</string>
+    <string name="no_categories_match_search">No categories found matching \"%1$s\"</string>
+    <string name="no_memes_in_category">No memes found in the \'%1$s\' category.</string>
+    <string name="no_category_memes">No memes in this category yet.</string>
+    <string name="error_loading_memes">Oops! Could not load memes.</string>
+    <string name="error_loading_categories">Oops! Could not load categories.</string>
+    <string name="unknown_error">An unknown error occurred.</string>
+    <string name="title_category_memes">Category Memes</string>
+    <string name="permission_denied_message">Storage permission is required for downloads.</string>
+    <string name="permission_rationale">Storage access is needed to save memes.</string>
+    <string name="ok">OK</string>
+    <string name="permission_needed_download">Storage permission needed to download.</string>
+    <string name="download_url_not_available">Download URL for %1$s is not available.</string>
+    <string name="bundle_download_starting">Starting download for %1$s...</string>
+    <string name="bundle_download_success">%1$s downloaded successfully.</string>
+    <string name="bundle_download_failed">Failed to download %1$s: %2$s</string>
+    <string name="bundle_download_cancelled">Download for %1$s cancelled.</string>
+    <string name="version">Version</string>
+    <string name="developer">Developer</string>
+    <string name="developer_name">Your Name / Company</string>
+    <string name="data_source_title">Meme Data Source</string>
+    <string name="data_source_url">raw.githubusercontent.com/.../memes.json</string>
+    <string name="source_code_title">Source Code</string>
+    <string name="source_code_url">github.com/YourRepo/MemesJi</string>
+    <string name="more_header_info">Information</string>
+    <string name="more_header_contribute">Contribute</string>
+    <string name="more_header_more">More</string>
+    <string name="more_header_downloads">Downloads</string>
+    <string name="more_rate_app">Rate App</string>
+    <string name="more_rate_app_desc">Leave a review on the Play Store</string>
+    <string name="more_report_bug">Report a Bug</string>
+    <string name="more_report_bug_desc">Found an issue? Let us know</string>
+    <string name="more_translate">Help Translate</string>
+    <string name="more_translate_desc">Translate the app into other languages</string>
+    <string name="settings">Settings</string>
+    <string name="more_settings_desc">Configure app preferences (coming soon)</string>
+    <string name="settings_not_implemented">Settings not yet implemented.</string>
+    <string name="more_socials">Developer Profile</string>
+    <string name="more_socials_desc">Check out other projects</string>
+    <string name="could_not_open_link">Could not open the link.</string>
+    <string name="url_report_bug">https://github.com/YourRepo/MemesJi/issues</string>
+    <string name="url_translate">https://link.to.your.translation.platform</string>
+    <string name="url_developer_profile">https://github.com/YourUsername</string>
+    <string name="error_network">Network error. Please check your connection.</string>
+
+    
+    <string name="download">Download</string>
+    <string name="share">Share</string>
+    <string name="open_in_browser">Open in Browser</string>
+    <string name="back">Back</string>
+    <string name="download_started">Download started: %1$s</string>
+    <string name="download_failed">Download failed</string>
+    <string name="preparing_share">Preparing image for sharing...</string>
+    <string name="share_meme_title">Share Meme</string>
+    <string name="error_preparing_share">Could not prepare image for sharing.</string>
+    <string name="share_error">Error sharing meme.</string>
+    <string name="share_via">Share via</string>
+    <string name="action_download_category">Download Category</string>
+    <string name="confirm_download_category_title">Download \'%1$s\' Memes?</string>
+    <string name="confirm_download_category_message">Download all %1$d memes in this category?</string>
+    <string name="confirm_download_category_message_zip">Download all %1$d memes in this category as a ZIP file?</string>
+    <string name="download_one_by_one">Download One by One</string>
+    <string name="download_as_zip">Download as ZIP</string>
+    <string name="cancel">Cancel</string>
+    <string name="no_memes_to_download">No memes to download in this category.</string>
+    <string name="started_multiple_downloads">Started %1$d downloads.</string>
+    <string name="preparing_zip">Preparing ZIP file...</string>
+    <string name="zip_download_success">ZIP file saved: %1$s</string>
+    <string name="zip_download_failed">Failed to create or save ZIP file: %1$s</string>
+    <string name="creating_zip">Creating ZIP: %1$s...</string>
+    <string name="downloading_for_zip">Downloading image %1$d of %2$d for ZIP...</string>
+    <string name="error_downloading_for_zip">Error downloading image for ZIP.</string>
+
+    
+    <string name="download_classic_bundle">Classic Memes Bundle</string>
+    <string name="download_sad_bundle">Sad Memes Bundle</string>
+    <string name="download_relatable_bundle">Relatable Memes Bundle</string>
+    <string name="category_image_description">Image representing the category</string>
+    <string name="meme_image_description">Meme image</string>
+    <string name="title_home">Home</string>
+    <string name="title_categories">Categories</string>
+    <string name="title_more">More</string>
+
+    <!-- ADDED MISSING STRINGS -->
+    <string name="download_failed_single">Failed to start download for %1$s.</string>
+    <string name="download_one_by_one_complete">Started %1$d / %2$d downloads.</string>
+    <string name="zip_download_cancelled">ZIP download cancelled.</string>
+
+</resources>
