@@ -87,15 +87,23 @@ class MainActivity : AppCompatActivity() {
 
             binding.toolbar.isVisible = true
 
-            when {
-                isCategoryMemes -> {
+            when (destination.id) {
+                R.id.homeFragment -> {
+                    viewModel.switchToHomeView()
+                    supportActionBar?.title = getString(R.string.title_home)
+                }
+                R.id.categoriesFragment -> {
+                    supportActionBar?.title = getString(R.string.title_categories)
+                }
+                 R.id.moreFragment -> {
+                    supportActionBar?.title = getString(R.string.title_more)
+                }
+                R.id.categoryMemesFragment -> {
                     val categoryName = arguments?.getString("categoryName")
                     supportActionBar?.title = categoryName ?: getString(R.string.title_category_memes)
                 }
-                isSettings -> {
+                R.id.settingsFragment -> {
                     supportActionBar?.title = getString(R.string.settings)
-                }
-                isTopLevel -> {
                 }
                 else -> {
                     supportActionBar?.title = destination.label
