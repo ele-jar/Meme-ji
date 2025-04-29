@@ -43,7 +43,7 @@
     <string name="more_translate">Help Translate</string>
     <string name="more_translate_desc">Translate the app into other languages</string>
     <string name="settings">Settings</string>
-    <string name="more_settings_desc">Configure app preferences (coming soon)</string>
+    <string name="more_settings_desc_action">Configure app preferences</string>
     <string name="settings_not_implemented">Settings not yet implemented.</string>
     <string name="more_socials">Developer Profile</string>
     <string name="more_socials_desc">Check out other projects</string>
