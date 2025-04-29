@@ -38,6 +38,9 @@ class MemeRepository(
 
     private var allMemesCache: List<Meme>? = null
     private val categoryImageTagSuffix = "-categorie"
+    companion object {
+        const val SENSITIVE_TAG = "18+"
+    }
 
 
     fun isCacheEmpty(): Boolean {
@@ -77,33 +80,44 @@ class MemeRepository(
     fun getCategoriesWithImages(): List<CategoryItem> {
         val cache = allMemesCache ?: return emptyList()
 
-
         val distinctCategories = cache.flatMap { it.tags }
-            .filter { !it.endsWith(categoryImageTagSuffix, ignoreCase = true) }
+            .filter {
+                !it.endsWith(categoryImageTagSuffix, ignoreCase = true) &&
+                !it.equals(SENSITIVE_TAG, ignoreCase = true)
+            }
             .distinctBy { it.lowercase() }
             .sorted()
 
-        Log.d("MemeRepository", "Distinct categories found: $distinctCategories")
+        Log.d("MemeRepository", "Distinct non-sensitive categories found: $distinctCategories")
 
         return distinctCategories.map { categoryName ->
             val targetTag = "$categoryName$categoryImageTagSuffix"
 
             val representativeMeme = cache.find { meme ->
-
                 val hasBaseTag = meme.tags.any { it.equals(categoryName, ignoreCase = true) }
-
                 val hasSpecificTag = meme.tags.any { it.equals(targetTag, ignoreCase = true) }
+                val isSensitive = meme.tags.any { it.equals(SENSITIVE_TAG, ignoreCase = true)}
 
-                hasBaseTag && hasSpecificTag
+                hasBaseTag && hasSpecificTag && !isSensitive
             }
 
             if (representativeMeme != null) {
                  Log.d("MemeRepository", "Found image for category '$categoryName': ${representativeMeme.url}")
             } else {
-                 Log.w("MemeRepository", "No image found for category '$categoryName' (looked for tags '$categoryName' and '$targetTag')")
+                 val fallbackMeme = cache.find { meme ->
+                     val hasBaseTag = meme.tags.any { it.equals(categoryName, ignoreCase = true) }
+                     val isSensitive = meme.tags.any { it.equals(SENSITIVE_TAG, ignoreCase = true)}
+                     hasBaseTag && !isSensitive
+                 }
+                 if (fallbackMeme != null) {
+                      Log.w("MemeRepository", "No specific image found for category '$categoryName', using fallback: ${fallbackMeme.url}")
+                 } else {
+                      Log.w("MemeRepository", "No image found for category '$categoryName' (looked for tags '$categoryName' and '$targetTag', excluding sensitive)")
+                 }
+                 return@map CategoryItem(name = categoryName, imageUrl = fallbackMeme?.url)
             }
 
-            CategoryItem(name = categoryName, imageUrl = representativeMeme?.url)
+            CategoryItem(name = categoryName, imageUrl = representativeMeme.url)
         }
     }
 
@@ -210,8 +224,6 @@ class MemeRepository(
 
              if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                   outputStream = createOutputStreamQ(zipFileName, context)
-                  
-                  
                   zipFile = File(context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS), zipFileName)
                   Log.d("MemeRepository", "Using MediaStore for $zipFileName")
              } else {
@@ -254,19 +266,17 @@ class MemeRepository(
                      tempFile.delete()
                   } catch (e: Exception) {
                       Log.e("MemeRepository", "Failed to download or add ${meme.name} to zip", e)
-                      
                   }
              }
 
              progressCallback(context.getString(R.string.creating_zip, zipFileName))
              zipOutputStream.flush()
              Log.d("MemeRepository", "Zip file creation finished for: $zipFileName")
-             Result.success(zipFile ?: File(zipFileName)) 
+             Result.success(zipFile ?: File(zipFileName))
 
          } catch (e: Exception) {
              Log.e("MemeRepository", "Error creating zip file for $categoryName", e)
              if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && outputStream != null) {
-                  
                   deleteIncompleteMediaStoreEntry(zipFileName, context)
               } else {
                   zipFile?.delete()
@@ -309,7 +319,7 @@ class MemeRepository(
                    }
               } catch (e: Exception) {
                   Log.e("MemeRepository", "Exception opening output stream for URI: $uri, deleting entry.", e)
-                   try { resolver.delete(uri, null, null) } catch (deleteEx: Exception) { /* ignore */ }
+                   try { resolver.delete(uri, null, null) } catch (deleteEx: Exception) { }
               }
           } else {
               Log.e("MemeRepository", "MediaStore insert failed for $fileName")
@@ -326,7 +336,11 @@ class MemeRepository(
               val selection = "${MediaStore.MediaColumns.RELATIVE_PATH}=? AND ${MediaStore.MediaColumns.DISPLAY_NAME}=? AND ${MediaStore.MediaColumns.IS_PENDING}=1"
               val selectionArgs = arrayOf(Environment.DIRECTORY_DOWNLOADS + File.separator, fileName)
               val deletedRows = resolver.delete(downloadsCollection, selection, selectionArgs)
-              Log.d("MemeRepository", "Deleted $deletedRows incomplete/pending MediaStore entry for $fileName")
+              if (deletedRows > 0) {
+                  Log.d("MemeRepository", "Deleted $deletedRows incomplete/pending MediaStore entry for $fileName")
+              } else {
+                  Log.w("MemeRepository", "No pending MediaStore entry found to delete for $fileName")
+              }
           } catch (e: Exception) {
               Log.e("MemeRepository", "Error deleting incomplete MediaStore entry for $fileName", e)
           }
