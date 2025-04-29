@@ -8,6 +8,7 @@ import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
+import android.webkit.MimeTypeMap
 import androidx.annotation.RequiresApi
 import androidx.core.content.FileProvider
 import com.bumptech.glide.Glide
@@ -41,6 +42,8 @@ class MemeRepository(
     companion object {
         const val SENSITIVE_TAG = "18+"
     }
+
+    data class ShareableData(val uri: Uri, val mimeType: String?)
 
 
     fun isCacheEmpty(): Boolean {
@@ -147,12 +150,15 @@ class MemeRepository(
          }
      }
 
-     suspend fun getShareableUri(file: File): Uri? = withContext(Dispatchers.Main) {
+     suspend fun getShareableUri(file: File): ShareableData? = withContext(Dispatchers.Main) {
          try {
-
-             val cacheDir = File(context.cacheDir, "images")
+             val cacheDir = File(context.cacheDir, "share_cache")
              cacheDir.mkdirs()
-             val targetFile = File(cacheDir, makeFilenameSafe(file.name))
+
+             val extension = MimeTypeMap.getFileExtensionFromUrl(file.path)
+             val mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension?.lowercase()) ?: "image/*"
+             val safeFileNameWithExt = makeFilenameSafe(file.name) + if (extension != null) ".$extension" else ""
+             val targetFile = File(cacheDir, safeFileNameWithExt)
 
 
              if (file.canonicalPath != targetFile.canonicalPath) {
@@ -165,20 +171,21 @@ class MemeRepository(
              }
 
 
-             FileProvider.getUriForFile(
+             val uri = FileProvider.getUriForFile(
                  context,
                  "${context.packageName}.provider",
                  targetFile
              )
+             ShareableData(uri, mimeType)
          } catch (e: Exception) {
-             Log.e("MemeRepository", "Error creating FileProvider URI", e)
+             Log.e("MemeRepository", "Error creating FileProvider URI or getting MIME type", e)
              null
          }
      }
 
 
      private fun makeFilenameSafe(input: String): String {
-         val pattern = Pattern.compile("[^a-zA-Z0-9-_\\.]")
+         val pattern = Pattern.compile("[^a-zA-Z0-9-_]")
          val safe = pattern.matcher(input).replaceAll("_")
          return safe.take(100)
      }
