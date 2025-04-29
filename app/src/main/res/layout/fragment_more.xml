@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/scrollViewMore"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clipToPadding="false"
+    tools:context=".ui.fragments.MoreFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingBottom="16dp">
+
+        <!-- Info Section Header -->
+        <include layout="@layout/item_more_header"
+            android:id="@+id/headerInfo" />
+            <!-- Removed app:headerText -->
+
+        <!-- App Version -->
+        <include layout="@layout/item_more_info"
+            android:id="@+id/itemAppVersion" />
+
+        <!-- Developer -->
+        <include layout="@layout/item_more_info"
+            android:id="@+id/itemDeveloper" />
+
+        <!-- Data Source -->
+        <include layout="@layout/item_more_info"
+            android:id="@+id/itemSource" />
+
+        <!-- Source Code -->
+        <include layout="@layout/item_more_info"
+            android:id="@+id/itemSourceCode" />
+
+
+        <!-- Contribute Section Header -->
+        <include layout="@layout/item_more_header"
+            android:id="@+id/headerContribute" />
+             <!-- Removed app:headerText -->
+
+        <!-- Rate App -->
+        <include layout="@layout/item_more_info"
+            android:id="@+id/itemRateApp" />
+             <!-- Removed app: attributes -->
+
+        <!-- Report Bug -->
+        <include layout="@layout/item_more_info"
+            android:id="@+id/itemReportBug"/>
+              <!-- Removed app: attributes -->
+
+        <!-- Translate -->
+        <include layout="@layout/item_more_info"
+            android:id="@+id/itemTranslate"/>
+             <!-- Removed app: attributes -->
+
+
+        <!-- More Section Header -->
+        <include layout="@layout/item_more_header"
+            android:id="@+id/headerMore" />
+            <!-- Removed app:headerText -->
+
+        <!-- Settings -->
+        <include layout="@layout/item_more_info"
+            android:id="@+id/itemSettings"/>
+             <!-- Removed app: attributes -->
+
+        <!-- Socials -->
+        <include layout="@layout/item_more_info"
+            android:id="@+id/itemSocials" />
+            <!-- Removed app: attributes -->
+
+         <!-- Download Bundles Section Header -->
+        <include layout="@layout/item_more_header"
+            android:id="@+id/headerDownloads" />
+             <!-- Removed app:headerText -->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:paddingTop="8dp">
+
+            <!-- Download Status -->
+            <TextView
+                android:id="@+id/text_view_bundle_download_status"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?attr/textAppearanceBodyMedium"
+                android:paddingBottom="4dp"
+                android:visibility="gone"
+                tools:visibility="visible"
+                tools:text="Downloading Classic bundle…"/>
+
+            <com.google.android.material.progressindicator.LinearProgressIndicator
+                android:id="@+id/progress_bar_bundle_download"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:indeterminate="true"
+                android:visibility="gone"
+                tools:visibility="visible"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/button_download_classic"
+                style="@style/Widget.Material3.Button.OutlinedButton.Icon"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/download_classic_bundle"
+                app:icon="@drawable/ic_download" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/button_download_sad"
+                style="@style/Widget.Material3.Button.OutlinedButton.Icon"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/download_sad_bundle"
+                app:icon="@drawable/ic_download" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/button_download_relatable"
+                style="@style/Widget.Material3.Button.OutlinedButton.Icon"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/download_relatable_bundle"
+                app:icon="@drawable/ic_download" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</androidx.core.widget.NestedScrollView>
