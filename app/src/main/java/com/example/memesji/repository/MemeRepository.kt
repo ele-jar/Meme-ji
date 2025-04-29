@@ -447,3 +447,19 @@ class MemeRepository(
                                    zipInputStream.copyTo(output)
                               }
                           }
+                      }
+                      zipInputStream.closeEntry()
+                  }
+                  zipInputStream.close()
+                  Log.d("MemeRepository", "Download and unzip completed successfully.")
+                  Result.success(Unit)
+
+             } ?: Result.failure(IOException("Response body was null for bundle download"))
+
+          } catch (e: Exception) {
+              Log.e("MemeRepository", "Error downloading or unzipping bundle from $bundleUrl", e)
+              destinationDir.deleteRecursively()
+              Result.failure(e)
+              } 
+     }
+ }
