@@ -26,6 +26,7 @@ import okhttp3.Response
 import okio.buffer
 import okio.sink
 import java.io.*
+import java.util.Locale
 import java.util.regex.Pattern
 import java.util.zip.ZipEntry
 import java.util.zip.ZipInputStream
@@ -142,6 +143,7 @@ class MemeRepository(
                  Log.d("MemeRepository", "Image downloaded via Glide cache: ${file.path}")
                  Result.success(file)
              } else {
+                 Log.e("MemeRepository", "Failed to download image using Glide cache: File is null or doesn't exist.")
                  Result.failure(IOException("Failed to download image using Glide"))
              }
          } catch (e: Exception) {
@@ -150,20 +152,24 @@ class MemeRepository(
          }
      }
 
-     suspend fun getShareableUri(file: File): ShareableData? = withContext(Dispatchers.Main) {
+     suspend fun getShareableUri(fileFromCache: File): ShareableData? = withContext(Dispatchers.Main) {
          try {
              val cacheDir = File(context.cacheDir, "share_cache")
              cacheDir.mkdirs()
 
-             val extension = MimeTypeMap.getFileExtensionFromUrl(file.path)
-             val mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension?.lowercase()) ?: "image/*"
-             val safeFileNameWithExt = makeFilenameSafe(file.name) + if (extension != null) ".$extension" else ""
-             val targetFile = File(cacheDir, safeFileNameWithExt)
+             val originalFileName = fileFromCache.name // Get the full name from the cache file
+             val safeBaseName = makeFilenameSafe(originalFileName.substringBeforeLast('.', originalFileName))
+             val extension = originalFileName.substringAfterLast('.', "").lowercase(Locale.ROOT)
+
+             val targetFileName = if (extension.isNotEmpty()) "$safeBaseName.$extension" else safeBaseName
+             val targetFile = File(cacheDir, targetFileName)
+             Log.d("MemeRepository", "Original cache file: ${fileFromCache.path}")
+             Log.d("MemeRepository", "Target share file: ${targetFile.path}")
 
 
-             if (file.canonicalPath != targetFile.canonicalPath) {
+             if (fileFromCache.canonicalPath != targetFile.canonicalPath) {
                   withContext(Dispatchers.IO) {
-                       file.copyTo(targetFile, overwrite = true)
+                       fileFromCache.copyTo(targetFile, overwrite = true)
                        Log.d("MemeRepository", "Copied cached file to share dir: ${targetFile.path}")
                   }
              } else {
@@ -171,11 +177,15 @@ class MemeRepository(
              }
 
 
+             val mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension) ?: "image/*"
+             Log.d("MemeRepository", "Determined extension: '$extension', MIME type: '$mimeType'")
+
              val uri = FileProvider.getUriForFile(
                  context,
                  "${context.packageName}.provider",
                  targetFile
              )
+             Log.d("MemeRepository", "Generated share URI: $uri")
              ShareableData(uri, mimeType)
          } catch (e: Exception) {
              Log.e("MemeRepository", "Error creating FileProvider URI or getting MIME type", e)
