@@ -14,11 +14,11 @@ import androidx.core.view.isVisible
 import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import com.example.memesji.BuildConfig
 import com.example.memesji.R
 import com.example.memesji.databinding.FragmentMoreBinding
 import com.example.memesji.ui.MainActivity
-import com.example.memesji.util.PreferencesHelper
 import com.example.memesji.viewmodel.MemeViewModel
 import com.google.android.material.transition.MaterialFadeThrough
 
@@ -129,11 +129,9 @@ class MoreFragment : Fragment() {
 
 
      private fun setupMoreSection() {
-         binding.switchCutieMode.isChecked = PreferencesHelper.isCutieModeEnabled(requireContext())
-
          binding.itemSettings.apply {
              primaryText.text = getString(R.string.settings)
-             secondaryText.text = getString(R.string.more_settings_desc)
+             secondaryText.text = getString(R.string.more_settings_desc_action)
              secondaryText.isVisible = true
              icon.setImageResource(R.drawable.ic_settings)
          }
@@ -152,13 +150,9 @@ class MoreFragment : Fragment() {
         binding.itemReportBug.root.setOnClickListener { openUrl(getString(R.string.url_report_bug)) }
         binding.itemTranslate.root.setOnClickListener { openUrl(getString(R.string.url_translate)) }
         binding.itemSettings.root.setOnClickListener {
-            Toast.makeText(context, R.string.settings_not_implemented, Toast.LENGTH_SHORT).show()
+            findNavController().navigate(MoreFragmentDirections.actionMoreFragmentToSettingsFragment())
         }
         binding.itemSocials.root.setOnClickListener { openUrl(getString(R.string.url_developer_profile)) }
-
-        binding.switchCutieMode.setOnCheckedChangeListener { _, isChecked ->
-            viewModel.updateCutieMode(isChecked)
-        }
 
         binding.buttonDownloadClassic.setOnClickListener {
             downloadBundle("Classic Memes", memeBundles["Classic Memes"])
@@ -207,12 +201,6 @@ class MoreFragment : Fragment() {
                   if(!isLoading && currentStatus != null && !currentStatus.contains(getString(R.string.bundle_download_success).substringBefore('%')) && !currentStatus.contains(getString(R.string.bundle_download_failed).substringBefore('%')) ) {
                      viewModel.clearBundleDownloadStatus()
                   }
-             }
-         }
-
-         viewModel.isCutieModeEnabled.observe(viewLifecycleOwner) { isEnabled ->
-             if (binding.switchCutieMode.isChecked != isEnabled) {
-                 binding.switchCutieMode.isChecked = isEnabled
              }
          }
      }
