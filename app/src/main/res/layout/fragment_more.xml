@@ -14,68 +14,66 @@
         android:orientation="vertical"
         android:paddingBottom="16dp">
 
-        <!-- Info Section Header -->
         <include layout="@layout/item_more_header"
             android:id="@+id/headerInfo" />
-            <!-- Removed app:headerText -->
 
-        <!-- App Version -->
         <include layout="@layout/item_more_info"
             android:id="@+id/itemAppVersion" />
 
-        <!-- Developer -->
         <include layout="@layout/item_more_info"
             android:id="@+id/itemDeveloper" />
 
-        <!-- Data Source -->
         <include layout="@layout/item_more_info"
             android:id="@+id/itemSource" />
 
-        <!-- Source Code -->
         <include layout="@layout/item_more_info"
             android:id="@+id/itemSourceCode" />
 
-
-        <!-- Contribute Section Header -->
         <include layout="@layout/item_more_header"
             android:id="@+id/headerContribute" />
-             <!-- Removed app:headerText -->
 
-        <!-- Rate App -->
         <include layout="@layout/item_more_info"
             android:id="@+id/itemRateApp" />
-             <!-- Removed app: attributes -->
 
-        <!-- Report Bug -->
         <include layout="@layout/item_more_info"
             android:id="@+id/itemReportBug"/>
-              <!-- Removed app: attributes -->
 
-        <!-- Translate -->
         <include layout="@layout/item_more_info"
             android:id="@+id/itemTranslate"/>
-             <!-- Removed app: attributes -->
 
-
-        <!-- More Section Header -->
         <include layout="@layout/item_more_header"
             android:id="@+id/headerMore" />
-            <!-- Removed app:headerText -->
 
-        <!-- Settings -->
+        <com.google.android.material.materialswitch.MaterialSwitch
+            android:id="@+id/switchCutieMode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="?attr/listPreferredItemHeight"
+            android:paddingVertical="8dp"
+            android:paddingHorizontal="16dp"
+            android:textAppearance="?attr/textAppearanceBodyLarge"
+            android:text="@string/cutie_mode"
+            app:thumbIconTint="?attr/colorOnPrimary"
+            app:trackTint="?attr/colorPrimary"
+            app:thumbTint="?attr/colorPrimary" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="16dp"
+            android:paddingBottom="8dp"
+            android:textAppearance="?attr/textAppearanceBodySmall"
+            android:textColor="?android:attr/textColorSecondary"
+            android:text="@string/cutie_mode_desc"/>
+
         <include layout="@layout/item_more_info"
             android:id="@+id/itemSettings"/>
-             <!-- Removed app: attributes -->
 
-        <!-- Socials -->
         <include layout="@layout/item_more_info"
             android:id="@+id/itemSocials" />
-            <!-- Removed app: attributes -->
 
-         <!-- Download Bundles Section Header -->
-        <include layout="@layout/item_more_header"
+         <include layout="@layout/item_more_header"
             android:id="@+id/headerDownloads" />
-             <!-- Removed app:headerText -->
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -85,7 +83,6 @@
             android:paddingEnd="16dp"
             android:paddingTop="8dp">
 
-            <!-- Download Status -->
             <TextView
                 android:id="@+id/text_view_bundle_download_status"
                 android:layout_width="match_parent"
