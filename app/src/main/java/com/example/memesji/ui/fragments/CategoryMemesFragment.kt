@@ -27,8 +27,8 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.example.memesji.R
 import com.example.memesji.data.Meme
-// Remove DialogMemeDetailBinding import
-import com.example.memesji.databinding.FragmentCategoryMemesBinding // Keep Fragment binding
+
+import com.example.memesji.databinding.FragmentCategoryMemesBinding
 import com.example.memesji.ui.MainActivity
 import com.example.memesji.ui.adapter.MemeAdapter
 import com.example.memesji.viewmodel.MemeViewModel
@@ -152,7 +152,7 @@ class CategoryMemesFragment : Fragment() {
 
           viewModel.shareStatus.observe(viewLifecycleOwner) { event ->
               event?.getContentIfNotHandled()?.let { status ->
-                  updateShareProgress(status.message, status.isLoading, status.isError)
+                  updateShareProgress(status)
               }
           }
 
@@ -173,31 +173,28 @@ class CategoryMemesFragment : Fragment() {
         }
     }
 
-     // Reverted Dialog creation logic
      private fun showMemeDetailDialog(meme: Meme) {
-          detailDialog?.dismiss() // Dismiss previous if any
+          detailDialog?.dismiss()
 
           context?.let { ctx ->
              val dialog = Dialog(ctx)
              dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-             dialog.setContentView(R.layout.dialog_meme_detail) // Use the correct layout ID for v1
-             dialog.window?.setBackgroundDrawableResource(android.R.color.transparent) // Match older style
-             dialog.window?.setDimAmount(0.7f) // Match older style
-             // dialog.window?.attributes?.windowAnimations = R.style.DialogAnimation // Optional: Re-add if style exists
+             dialog.setContentView(R.layout.dialog_meme_detail)
+             dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+             dialog.window?.setDimAmount(0.7f)
+
              dialog.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
              dialog.setCanceledOnTouchOutside(true)
 
-             // Find views using findViewById from the dialog's content view
              val memeImageView = dialog.findViewById<ImageView>(R.id.imageViewDialogMeme)
              val memeNameTextView = dialog.findViewById<TextView>(R.id.textViewDialogMemeName)
              val downloadButton = dialog.findViewById<com.google.android.material.button.MaterialButton>(R.id.buttonDialogDownload)
              val browserButton = dialog.findViewById<com.google.android.material.button.MaterialButton>(R.id.buttonDialogOpenBrowser)
              val shareButton = dialog.findViewById<com.google.android.material.button.MaterialButton>(R.id.buttonDialogShare)
              val backButton = dialog.findViewById<com.google.android.material.button.MaterialButton>(R.id.buttonDialogBack)
-              // No need to find progress/status text here initially, they are handled in updateShareProgress
 
              memeNameTextView.text = meme.name
-             Glide.with(ctx) // Use context from let block
+             Glide.with(ctx)
                  .load(meme.url)
                  .placeholder(R.drawable.ic_placeholder_image)
                  .error(R.drawable.ic_placeholder_image)
@@ -221,7 +218,7 @@ class CategoryMemesFragment : Fragment() {
              }
 
              dialog.setOnDismissListener {
-                 detailDialog = null // Clear reference
+                 detailDialog = null
              }
 
              detailDialog = dialog
@@ -235,39 +232,33 @@ class CategoryMemesFragment : Fragment() {
           }
       }
 
-       private fun updateShareProgress(message: String?, isLoading: Boolean, isError: Boolean) {
+       private fun updateShareProgress(status: MemeViewModel.ShareStatus) {
           detailDialog?.let { dialog ->
-               // Find these views here, only when needed
               val progressBar = dialog.findViewById<ProgressBar>(R.id.progressBarDialogShare)
               val statusText = dialog.findViewById<TextView>(R.id.textViewDialogShareStatus)
 
-              progressBar?.isVisible = isLoading
-              statusText?.isVisible = !message.isNullOrBlank()
-              statusText?.text = message ?: ""
+              progressBar?.isVisible = status.isLoading
+              statusText?.isVisible = !status.message.isNullOrBlank()
+              statusText?.text = status.message ?: ""
 
 
-              if (!isLoading) {
-                  if (!isError && message == getString(R.string.share_via)) {
-                      viewModel.shareIntentUri?.let { uri ->
-                          startShareIntent(uri)
-                          viewModel.clearShareIntentUri()
+              if (!status.isLoading) {
+                  if (!status.isError && status.shareUri != null && status.mimeType != null) {
+                      startShareIntent(status.shareUri, status.mimeType)
+                      viewModel.clearShareIntentUri()
+                  } else if (status.isError) {
+                      if (!status.message.isNullOrBlank()) {
+                          Toast.makeText(context, status.message, Toast.LENGTH_SHORT).show()
                       }
-                  } else if (isError) {
-                      if (!message.isNullOrBlank()) {
-                          Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
-                      }
-                      // Optionally hide progress/status after error
-                      // progressBar?.isVisible = false
-                      // statusText?.isVisible = false
                   }
               }
           }
       }
 
-      private fun startShareIntent(imageUri: Uri) {
+      private fun startShareIntent(imageUri: Uri, mimeType: String) {
           try {
               val shareIntent = Intent(Intent.ACTION_SEND).apply {
-                  type = "image/*"
+                  type = mimeType
                   putExtra(Intent.EXTRA_STREAM, imageUri)
                   addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
               }
@@ -322,7 +313,6 @@ class CategoryMemesFragment : Fragment() {
 
      override fun onPause() {
         super.onPause()
-        // Dismiss dialogs on pause to avoid leaks if fragment is backgrounded
         detailDialog?.dismiss()
         categoryDownloadDialog?.dismiss()
     }
