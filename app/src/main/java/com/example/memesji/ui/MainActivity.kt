@@ -96,10 +96,19 @@ class MainActivity : AppCompatActivity() {
                     supportActionBar?.title = getString(R.string.settings)
                 }
                 isTopLevel -> {
-
                 }
                 else -> {
                     supportActionBar?.title = destination.label
+                }
+            }
+
+            val bottomNavView = binding.bottomNavView
+            when (destination.id) {
+                R.id.categoryMemesFragment -> {
+                    bottomNavView.menu.findItem(R.id.categoriesFragment)?.isChecked = true
+                }
+                R.id.settingsFragment -> {
+                    bottomNavView.menu.findItem(R.id.moreFragment)?.isChecked = true
                 }
             }
 
