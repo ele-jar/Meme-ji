@@ -15,7 +15,6 @@
         android:paddingHorizontal="16dp"
         android:paddingBottom="24dp">
 
-        <!-- Info Section -->
         <include
             android:id="@+id/headerInfo"
             layout="@layout/list_header"
@@ -39,7 +38,6 @@
             android:id="@+id/itemSourceCode"
             layout="@layout/list_item_more" />
 
-        <!-- Contribute Section -->
         <include
             android:id="@+id/headerContribute"
             layout="@layout/list_header"
@@ -60,7 +58,6 @@
             android:id="@+id/itemTranslate"
             layout="@layout/list_item_more" />
 
-        <!-- More Section -->
         <include
             android:id="@+id/headerMore"
             layout="@layout/list_header"
@@ -69,7 +66,6 @@
             android:layout_marginTop="24dp"
             android:layout_marginBottom="8dp" />
 
-        <!-- Cutie Mode Toggle -->
         <com.google.android.material.materialswitch.MaterialSwitch
             android:id="@+id/switchCutieMode"
             android:layout_width="match_parent"
@@ -99,8 +95,6 @@
             android:id="@+id/itemSocials"
             layout="@layout/list_item_more" />
 
-
-        <!-- Downloads Section -->
         <include
             android:id="@+id/headerDownloads"
             layout="@layout/list_header"
@@ -134,7 +128,6 @@
             android:text="@string/download_relatable_bundle"
             app:icon="@drawable/ic_download" />
 
-        <!-- Bundle Download Status -->
         <TextView
             android:id="@+id/textViewBundleDownloadStatus"
             android:layout_width="match_parent"
