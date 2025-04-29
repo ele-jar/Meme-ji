@@ -18,6 +18,7 @@ import com.example.memesji.BuildConfig
 import com.example.memesji.R
 import com.example.memesji.databinding.FragmentMoreBinding
 import com.example.memesji.ui.MainActivity
+import com.example.memesji.util.PreferencesHelper
 import com.example.memesji.viewmodel.MemeViewModel
 import com.google.android.material.transition.MaterialFadeThrough
 
@@ -30,7 +31,6 @@ class MoreFragment : Fragment() {
 
     private val memeBundles = mapOf(
         "Classic Memes" to "https://github.com/ele-jar/meme-database/archive/refs/heads/main.zip",
-
         "Sad Memes" to "https://example.com/memes_sad.zip",
         "Relatable Memes" to "https://example.com/memes_relatable.zip"
     )
@@ -129,6 +129,8 @@ class MoreFragment : Fragment() {
 
 
      private fun setupMoreSection() {
+         binding.switchCutieMode.isChecked = PreferencesHelper.isCutieModeEnabled(requireContext())
+
          binding.itemSettings.apply {
              primaryText.text = getString(R.string.settings)
              secondaryText.text = getString(R.string.more_settings_desc)
@@ -154,6 +156,9 @@ class MoreFragment : Fragment() {
         }
         binding.itemSocials.root.setOnClickListener { openUrl(getString(R.string.url_developer_profile)) }
 
+        binding.switchCutieMode.setOnCheckedChangeListener { _, isChecked ->
+            viewModel.updateCutieMode(isChecked)
+        }
 
         binding.buttonDownloadClassic.setOnClickListener {
             downloadBundle("Classic Memes", memeBundles["Classic Memes"])
@@ -175,11 +180,8 @@ class MoreFragment : Fragment() {
             return
         }
         (activity as? MainActivity)?.requestStoragePermission {
-
             viewModel.downloadBundle(bundleName, bundleUrl)
         }
-
-
     }
 
     private fun observeViewModel() {
@@ -187,16 +189,31 @@ class MoreFragment : Fragment() {
              binding.textViewBundleDownloadStatus.isVisible = !status.isNullOrBlank()
              binding.textViewBundleDownloadStatus.text = status ?: ""
 
-             val isDownloading = status?.contains("...") == true || status?.contains(getString(R.string.bundle_download_starting)) == true
+             val isDownloading = status?.contains("...") == true || status?.contains(getString(R.string.bundle_download_starting).substringBefore('%')) == true
              binding.progressBarBundleDownload.isVisible = isDownloading
              setDownloadButtonsEnabled(!isDownloading)
          }
+
          viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
             val currentStatus = viewModel.bundleDownloadStatus.value
+            val isBundleDownloading = currentStatus?.contains("...") == true || currentStatus?.contains(getString(R.string.bundle_download_starting).substringBefore('%')) == true
 
-            val isDownloading = currentStatus?.contains("...") == true || currentStatus?.contains(getString(R.string.bundle_download_starting)) == true
-             binding.progressBarBundleDownload.isVisible = isDownloading
-            setDownloadButtonsEnabled(!isDownloading)
+             if (isLoading && isBundleDownloading) {
+                 setDownloadButtonsEnabled(false)
+                 binding.progressBarBundleDownload.isVisible = true
+             } else if (!isBundleDownloading) {
+                 setDownloadButtonsEnabled(true)
+                 binding.progressBarBundleDownload.isVisible = false
+                  if(!isLoading && currentStatus != null && !currentStatus.contains(getString(R.string.bundle_download_success).substringBefore('%')) && !currentStatus.contains(getString(R.string.bundle_download_failed).substringBefore('%')) ) {
+                     viewModel.clearBundleDownloadStatus()
+                  }
+             }
+         }
+
+         viewModel.isCutieModeEnabled.observe(viewLifecycleOwner) { isEnabled ->
+             if (binding.switchCutieMode.isChecked != isEnabled) {
+                 binding.switchCutieMode.isChecked = isEnabled
+             }
          }
      }
 
@@ -218,6 +235,10 @@ class MoreFragment : Fragment() {
     }
 
     private fun openUrl(url: String) {
+         if (url.isBlank()) {
+             Toast.makeText(context, R.string.could_not_open_link, Toast.LENGTH_SHORT).show()
+             return
+         }
         try {
             val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
             startActivity(intent)
