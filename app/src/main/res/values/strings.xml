@@ -1,5 +1,5 @@
 <resources>
-    
+
     <string name="app_name">Memes Ji</string>
     <string name="home">Home</string>
     <string name="categories">Categories</string>
@@ -53,7 +53,9 @@
     <string name="url_developer_profile">https://github.com/YourUsername</string>
     <string name="error_network">Network error. Please check your connection.</string>
 
-    
+    <string name="cutie_mode">Cutie Mode</string>
+    <string name="cutie_mode_desc">Hide potentially sensitive memes (tagged "18+")</string>
+
     <string name="download">Download</string>
     <string name="share">Share</string>
     <string name="open_in_browser">Open in Browser</string>
@@ -81,7 +83,6 @@
     <string name="downloading_for_zip">Downloading image %1$d of %2$d for ZIP...</string>
     <string name="error_downloading_for_zip">Error downloading image for ZIP.</string>
 
-    
     <string name="download_classic_bundle">Classic Memes Bundle</string>
     <string name="download_sad_bundle">Sad Memes Bundle</string>
     <string name="download_relatable_bundle">Relatable Memes Bundle</string>
@@ -91,7 +92,6 @@
     <string name="title_categories">Categories</string>
     <string name="title_more">More</string>
 
-    <!-- ADDED MISSING STRINGS -->
     <string name="download_failed_single">Failed to start download for %1$s.</string>
     <string name="download_one_by_one_complete">Started %1$d / %2$d downloads.</string>
     <string name="zip_download_cancelled">ZIP download cancelled.</string>
