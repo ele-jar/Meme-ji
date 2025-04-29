@@ -12,126 +12,149 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingBottom="16dp">
+        android:paddingHorizontal="16dp"
+        android:paddingBottom="24dp">
 
-        <!-- Info Section Header -->
-        <include layout="@layout/item_more_header"
-            android:id="@+id/headerInfo" />
-            <!-- Removed app:headerText -->
-
-        <!-- App Version -->
-        <include layout="@layout/item_more_info"
-            android:id="@+id/itemAppVersion" />
-
-        <!-- Developer -->
-        <include layout="@layout/item_more_info"
-            android:id="@+id/itemDeveloper" />
-
-        <!-- Data Source -->
-        <include layout="@layout/item_more_info"
-            android:id="@+id/itemSource" />
-
-        <!-- Source Code -->
-        <include layout="@layout/item_more_info"
-            android:id="@+id/itemSourceCode" />
-
-
-        <!-- Contribute Section Header -->
-        <include layout="@layout/item_more_header"
-            android:id="@+id/headerContribute" />
-             <!-- Removed app:headerText -->
-
-        <!-- Rate App -->
-        <include layout="@layout/item_more_info"
-            android:id="@+id/itemRateApp" />
-             <!-- Removed app: attributes -->
-
-        <!-- Report Bug -->
-        <include layout="@layout/item_more_info"
-            android:id="@+id/itemReportBug"/>
-              <!-- Removed app: attributes -->
-
-        <!-- Translate -->
-        <include layout="@layout/item_more_info"
-            android:id="@+id/itemTranslate"/>
-             <!-- Removed app: attributes -->
-
-
-        <!-- More Section Header -->
-        <include layout="@layout/item_more_header"
-            android:id="@+id/headerMore" />
-            <!-- Removed app:headerText -->
-
-        <!-- Settings -->
-        <include layout="@layout/item_more_info"
-            android:id="@+id/itemSettings"/>
-             <!-- Removed app: attributes -->
-
-        <!-- Socials -->
-        <include layout="@layout/item_more_info"
-            android:id="@+id/itemSocials" />
-            <!-- Removed app: attributes -->
-
-         <!-- Download Bundles Section Header -->
-        <include layout="@layout/item_more_header"
-            android:id="@+id/headerDownloads" />
-             <!-- Removed app:headerText -->
-
-        <LinearLayout
+        <!-- Info Section -->
+        <include
+            android:id="@+id/headerInfo"
+            layout="@layout/list_header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp"
-            android:paddingTop="8dp">
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="8dp" />
 
-            <!-- Download Status -->
-            <TextView
-                android:id="@+id/text_view_bundle_download_status"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textAppearance="?attr/textAppearanceBodyMedium"
-                android:paddingBottom="4dp"
-                android:visibility="gone"
-                tools:visibility="visible"
-                tools:text="Downloading Classic bundle…"/>
+        <include
+            android:id="@+id/itemAppVersion"
+            layout="@layout/list_item_more" />
 
-            <com.google.android.material.progressindicator.LinearProgressIndicator
-                android:id="@+id/progress_bar_bundle_download"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:indeterminate="true"
-                android:visibility="gone"
-                tools:visibility="visible"/>
+        <include
+            android:id="@+id/itemDeveloper"
+            layout="@layout/list_item_more" />
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/button_download_classic"
-                style="@style/Widget.Material3.Button.OutlinedButton.Icon"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="@string/download_classic_bundle"
-                app:icon="@drawable/ic_download" />
+        <include
+            android:id="@+id/itemSource"
+            layout="@layout/list_item_more" />
+        <include
+            android:id="@+id/itemSourceCode"
+            layout="@layout/list_item_more" />
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/button_download_sad"
-                style="@style/Widget.Material3.Button.OutlinedButton.Icon"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="@string/download_sad_bundle"
-                app:icon="@drawable/ic_download" />
+        <!-- Contribute Section -->
+        <include
+            android:id="@+id/headerContribute"
+            layout="@layout/list_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="8dp" />
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/button_download_relatable"
-                style="@style/Widget.Material3.Button.OutlinedButton.Icon"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="@string/download_relatable_bundle"
-                app:icon="@drawable/ic_download" />
+        <include
+            android:id="@+id/itemRateApp"
+            layout="@layout/list_item_more" />
 
-        </LinearLayout>
+        <include
+            android:id="@+id/itemReportBug"
+            layout="@layout/list_item_more" />
+
+        <include
+            android:id="@+id/itemTranslate"
+            layout="@layout/list_item_more" />
+
+        <!-- More Section -->
+        <include
+            android:id="@+id/headerMore"
+            layout="@layout/list_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="8dp" />
+
+        <!-- Cutie Mode Toggle -->
+        <com.google.android.material.materialswitch.MaterialSwitch
+            android:id="@+id/switchCutieMode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="?attr/listPreferredItemHeight"
+            android:paddingVertical="8dp"
+            android:textAppearance="?attr/textAppearanceBodyLarge"
+            android:text="@string/cutie_mode"
+            app:thumbIconTint="?attr/colorOnPrimary"
+            app:trackTint="?attr/colorPrimary"
+            app:thumbTint="?attr/colorPrimary" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="16dp"
+            android:paddingBottom="8dp"
+            android:textAppearance="?attr/textAppearanceBodySmall"
+            android:textColor="?android:attr/textColorSecondary"
+            android:text="@string/cutie_mode_desc"/>
+
+        <include
+            android:id="@+id/itemSettings"
+            layout="@layout/list_item_more" />
+
+        <include
+            android:id="@+id/itemSocials"
+            layout="@layout/list_item_more" />
+
+
+        <!-- Downloads Section -->
+        <include
+            android:id="@+id/headerDownloads"
+            layout="@layout/list_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="8dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/buttonDownloadClassic"
+            style="@style/Widget.Material3.Button.OutlinedButton.Icon"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/download_classic_bundle"
+            app:icon="@drawable/ic_download" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/buttonDownloadSad"
+            style="@style/Widget.Material3.Button.OutlinedButton.Icon"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/download_sad_bundle"
+            app:icon="@drawable/ic_download" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/buttonDownloadRelatable"
+            style="@style/Widget.Material3.Button.OutlinedButton.Icon"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/download_relatable_bundle"
+            app:icon="@drawable/ic_download" />
+
+        <!-- Bundle Download Status -->
+        <TextView
+            android:id="@+id/textViewBundleDownloadStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:gravity="center"
+            android:textAppearance="?attr/textAppearanceBodyMedium"
+            android:visibility="gone"
+            tools:text="Downloading Classic Memes..."
+            tools:visibility="visible" />
+
+        <ProgressBar
+            android:id="@+id/progressBarBundleDownload"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:indeterminate="true"
+            android:visibility="gone"
+            tools:visibility="visible" />
 
     </LinearLayout>
 
