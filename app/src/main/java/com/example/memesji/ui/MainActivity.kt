@@ -83,16 +83,25 @@ class MainActivity : AppCompatActivity() {
         navController.addOnDestinationChangedListener { _, destination, arguments ->
             val isTopLevel = appBarConfiguration.topLevelDestinations.contains(destination.id)
             val isCategoryMemes = destination.id == R.id.categoryMemesFragment
+            val isSettings = destination.id == R.id.settingsFragment
 
-            binding.toolbar.isVisible = isTopLevel || isCategoryMemes
+            binding.toolbar.isVisible = true
 
-            if (isCategoryMemes) {
-                val categoryName = arguments?.getString("categoryName")
-                supportActionBar?.title = categoryName ?: getString(R.string.title_category_memes)
-            } else if (!isTopLevel) {
+            when {
+                isCategoryMemes -> {
+                    val categoryName = arguments?.getString("categoryName")
+                    supportActionBar?.title = categoryName ?: getString(R.string.title_category_memes)
+                }
+                isSettings -> {
+                    supportActionBar?.title = getString(R.string.settings)
+                }
+                isTopLevel -> {
 
+                }
+                else -> {
+                    supportActionBar?.title = destination.label
+                }
             }
-
 
              invalidateMenu()
         }
@@ -111,43 +120,45 @@ class MainActivity : AppCompatActivity() {
 
                 val currentDestinationId = navController.currentDestination?.id
 
-                searchItem?.isVisible = currentDestinationId == R.id.homeFragment ||
+                val showSearch = currentDestinationId == R.id.homeFragment ||
                         currentDestinationId == R.id.categoryMemesFragment ||
                         currentDestinationId == R.id.categoriesFragment
 
+                val showDownload = currentDestinationId == R.id.categoryMemesFragment
 
-                downloadCategoryItem?.isVisible = currentDestinationId == R.id.categoryMemesFragment
+                searchItem?.isVisible = showSearch
+                downloadCategoryItem?.isVisible = showDownload
 
+                if(showSearch) {
+                    searchView?.queryHint = when (currentDestinationId) {
+                        R.id.categoriesFragment -> getString(R.string.search_categories_hint)
+                        else -> getString(R.string.search_hint)
+                    }
 
-                searchView?.queryHint = when (currentDestinationId) {
-                    R.id.categoriesFragment -> getString(R.string.search_categories_hint)
-                    else -> getString(R.string.search_hint)
+                    searchView?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+                        override fun onQueryTextSubmit(query: String?): Boolean {
+                            handleSearch(query)
+                            searchView.clearFocus()
+                            return true
+                        }
+
+                        override fun onQueryTextChange(newText: String?): Boolean {
+                            handleSearch(newText)
+                            return true
+                        }
+                    })
+
+                    searchItem?.setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
+                        override fun onMenuItemActionExpand(item: MenuItem): Boolean = true
+                        override fun onMenuItemActionCollapse(item: MenuItem): Boolean {
+                            handleSearch(null)
+                            return true
+                        }
+                    })
                 }
-
-                searchView?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-                    override fun onQueryTextSubmit(query: String?): Boolean {
-                        handleSearch(query)
-                        searchView.clearFocus()
-                        return true
-                    }
-
-                    override fun onQueryTextChange(newText: String?): Boolean {
-                        handleSearch(newText)
-                        return true
-                    }
-                })
-
-                searchItem?.setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
-                    override fun onMenuItemActionExpand(item: MenuItem): Boolean = true
-                    override fun onMenuItemActionCollapse(item: MenuItem): Boolean {
-                        handleSearch(null)
-                        return true
-                    }
-                })
             }
 
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-
                  if (menuItem.itemId == R.id.action_download_category) {
                      val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment)
                      val currentFragment = navHostFragment?.childFragmentManager?.fragments?.get(0)
@@ -158,7 +169,6 @@ class MainActivity : AppCompatActivity() {
                      }
                      return true
                  }
-
                 return false
             }
         }, this, Lifecycle.State.RESUMED)
@@ -239,10 +249,9 @@ class MainActivity : AppCompatActivity() {
         viewModel.singleMemeDownloadStatus.observe(this) { status ->
             status?.let {
                  Snackbar.make(binding.root, it, Snackbar.LENGTH_SHORT).show()
-                 viewModel.clearSingleMemeDownloadStatus() 
+                 viewModel.clearSingleMemeDownloadStatus()
             }
         }
-        
     }
 
     fun openUrlInBrowser(url: String?) {
