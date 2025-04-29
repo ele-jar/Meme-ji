@@ -131,7 +131,6 @@ class MemeRepository(
 
      suspend fun downloadImageToCache(imageUrl: String): Result<File> = withContext(Dispatchers.IO) {
          try {
-
              val file = Glide.with(context)
                  .asFile()
                  .load(imageUrl)
@@ -152,43 +151,61 @@ class MemeRepository(
          }
      }
 
-     suspend fun getShareableUri(fileFromCache: File): ShareableData? = withContext(Dispatchers.Main) {
+     suspend fun getShareableUri(meme: Meme, fileFromCache: File): ShareableData? = withContext(Dispatchers.Main) {
          try {
              val cacheDir = File(context.cacheDir, "share_cache")
              cacheDir.mkdirs()
 
-             val originalFileName = fileFromCache.name // Get the full name from the cache file
-             val safeBaseName = makeFilenameSafe(originalFileName.substringBeforeLast('.', originalFileName))
-             val extension = originalFileName.substringAfterLast('.', "").lowercase(Locale.ROOT)
+             // Determine extension primarily from original URL, fallback to cache file
+             val urlExtension = meme.url.substringAfterLast('.', "").lowercase(Locale.ROOT)
+             val cacheExtension = fileFromCache.name.substringAfterLast('.', "").lowercase(Locale.ROOT)
+             val extension = if (urlExtension.isNotEmpty() && urlExtension.length <= 4) urlExtension else cacheExtension
 
+             val safeBaseName = makeFilenameSafe(meme.name)
              val targetFileName = if (extension.isNotEmpty()) "$safeBaseName.$extension" else safeBaseName
              val targetFile = File(cacheDir, targetFileName)
-             Log.d("MemeRepository", "Original cache file: ${fileFromCache.path}")
-             Log.d("MemeRepository", "Target share file: ${targetFile.path}")
 
+             Log.d("MemeRepository", "Sharing Prep - URL: ${meme.url}")
+             Log.d("MemeRepository", "Sharing Prep - Cache File: ${fileFromCache.path}")
+             Log.d("MemeRepository", "Sharing Prep - Target File: ${targetFile.path}")
+             Log.d("MemeRepository", "Sharing Prep - Determined Extension: '$extension'")
 
-             if (fileFromCache.canonicalPath != targetFile.canonicalPath) {
-                  withContext(Dispatchers.IO) {
-                       fileFromCache.copyTo(targetFile, overwrite = true)
-                       Log.d("MemeRepository", "Copied cached file to share dir: ${targetFile.path}")
-                  }
-             } else {
-                  Log.d("MemeRepository", "File already in share cache dir: ${targetFile.path}")
+             // Ensure targetFile exists (even if empty) before generating URI
+             withContext(Dispatchers.IO) {
+                 if (!targetFile.exists()) {
+                     targetFile.createNewFile()
+                 }
              }
-
-
-             val mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension) ?: "image/*"
-             Log.d("MemeRepository", "Determined extension: '$extension', MIME type: '$mimeType'")
 
              val uri = FileProvider.getUriForFile(
                  context,
                  "${context.packageName}.provider",
                  targetFile
              )
-             Log.d("MemeRepository", "Generated share URI: $uri")
+             Log.d("MemeRepository", "Sharing Prep - Generated URI: $uri")
+
+             // Now copy the content
+             withContext(Dispatchers.IO) {
+                 fileFromCache.inputStream().use { input ->
+                     targetFile.outputStream().use { output ->
+                         input.copyTo(output)
+                     }
+                 }
+                 Log.d("MemeRepository", "Sharing Prep - Copied content from cache to target file")
+             }
+
+             // Determine MIME type from the reliable extension
+             val mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)?.also {
+                 Log.d("MemeRepository", "Sharing Prep - MimeTypeMap result: $it")
+             } ?: run {
+                 Log.w("MemeRepository", "Sharing Prep - MimeTypeMap failed for extension '$extension', defaulting to image/*")
+                 "image/*"
+             }
+
              ShareableData(uri, mimeType)
+
          } catch (e: Exception) {
-             Log.e("MemeRepository", "Error creating FileProvider URI or getting MIME type", e)
+             Log.e("MemeRepository", "Error preparing shareable URI", e)
              null
          }
      }
@@ -430,20 +447,3 @@ class MemeRepository(
                                    zipInputStream.copyTo(output)
                               }
                           }
-                      }
-                      zipInputStream.closeEntry()
-                  }
-                  zipInputStream.close()
-                  Log.d("MemeRepository", "Download and unzip completed successfully.")
-                  Result.success(Unit)
-
-             } ?: Result.failure(IOException("Response body was null for bundle download"))
-
-         } catch (e: Exception) {
-             Log.e("MemeRepository", "Error downloading or unzipping bundle from $bundleUrl", e)
-
-             destinationDir.deleteRecursively()
-             Result.failure(e)
-         }
-     }
-}
