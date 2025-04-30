@@ -61,8 +61,7 @@ class MemeViewModel(application: Application) : AndroidViewModel(application) {
     private val _singleMemeDownloadStatus = MutableLiveData<String?>()
     val singleMemeDownloadStatus: LiveData<String?> get() = _singleMemeDownloadStatus
 
-    private val _categoryDownloadStatus = MutableLiveData<String?>()
-    val categoryDownloadStatus: LiveData<String?> get() = _categoryDownloadStatus
+    // Removed categoryDownloadStatus LiveData
 
     private val _searchQuery = MutableLiveData<String?>()
     val searchQuery: LiveData<String?> get() = _searchQuery
@@ -295,7 +294,7 @@ class MemeViewModel(application: Application) : AndroidViewModel(application) {
          val downloadResult = repository.downloadImageToCache(meme.url)
 
          downloadResult.onSuccess { fileFromCache ->
-             val shareableData = repository.getShareableUri(meme, fileFromCache) // Pass meme object too
+             val shareableData = repository.getShareableUri(meme, fileFromCache)
              if (shareableData != null) {
                  _shareStatus.postValue(Event(ShareStatus(
                      message = getString(R.string.share_via),
@@ -331,67 +330,10 @@ class MemeViewModel(application: Application) : AndroidViewModel(application) {
          }
      }
 
-     fun downloadMemesOneByOne(memes: List<Meme>) {
-         if (memes.isEmpty()) {
-             _singleMemeDownloadStatus.value = getString(R.string.no_memes_to_download)
-             clearStatusAfterDelay(_singleMemeDownloadStatus, 3000L, true)
-             return
-         }
-         viewModelScope.launch {
-              var successCount = 0
-              var failCount = 0
-              memes.forEachIndexed { index, meme ->
-                  val downloadId = repository.downloadMemeWithManager(meme)
-                  if (downloadId == -1L) {
-                      Log.e("MemeViewModel", "Failed to start one-by-one download for ${meme.name}")
-                      failCount++
-                  } else {
-                      successCount++
-                      Log.d("MemeViewModel", "Started one-by-one download ${index + 1}/${memes.size}: ${meme.name}")
-                  }
+     // Removed downloadMemesOneByOne function
+     // Removed downloadCategoryAsZip function
+     // Removed categoryDownloadStatus LiveData and related functions
 
-                  if (index < memes.size - 1) {
-                      delay(500)
-                  }
-              }
-               val message = getString(R.string.download_one_by_one_complete, successCount, memes.size)
-               _singleMemeDownloadStatus.value = message
-               clearStatusAfterDelay(_singleMemeDownloadStatus, 5000L, failCount > 0)
-          }
-      }
-
-     fun downloadCategoryAsZip(categoryName: String, memes: List<Meme>) {
-          if (memes.isEmpty()) {
-              postCategoryDownloadStatus(getString(R.string.no_memes_to_download), isError = true)
-             return
-         }
-          viewModelScope.launch {
-              postCategoryDownloadStatus(getString(R.string.preparing_zip))
-              _isLoading.postValue(true)
-
-              val result = repository.downloadMemesAsZip(categoryName, memes) { progressMessage ->
-                   postCategoryDownloadStatus(progressMessage)
-               }
-
-               result.onSuccess { file ->
-                   val finalName = getFileNameFromMediaStoreUri(file) ?: file.name
-                   postCategoryDownloadStatus(getString(R.string.zip_download_success, finalName))
-
-                   if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                       markMediaStoreDownloadComplete(file)
-                   }
-
-               }.onFailure { throwable ->
-                   Log.e("MemeViewModel", "ZIP Creation/Save failed for category $categoryName", throwable)
-                   if (throwable is CancellationException) {
-                        postCategoryDownloadStatus(getString(R.string.zip_download_cancelled))
-                   } else {
-                        postCategoryDownloadStatus(getString(R.string.zip_download_failed, throwable.localizedMessage ?: "Unknown error"), isError = true)
-                   }
-               }
-               _isLoading.postValue(false)
-          }
-     }
 
     @RequiresApi(Build.VERSION_CODES.Q)
     private fun markMediaStoreDownloadComplete(pendingFile: File) {
@@ -440,9 +382,8 @@ class MemeViewModel(application: Application) : AndroidViewModel(application) {
           return fileName ?: file.name
       }
 
-      fun clearCategoryDownloadStatus() {
-          _categoryDownloadStatus.value = null
-      }
+     // Removed clearCategoryDownloadStatus function
+     // Removed postCategoryDownloadStatus function
 
      fun clearSingleMemeDownloadStatus() {
          _singleMemeDownloadStatus.value = null
@@ -451,13 +392,6 @@ class MemeViewModel(application: Application) : AndroidViewModel(application) {
      fun clearBundleDownloadStatus() {
         _bundleDownloadStatus.value = null
     }
-
-    private fun postCategoryDownloadStatus(message: String, duration: Long = 5000L, isError: Boolean = false) {
-          _categoryDownloadStatus.postValue(message)
-          if (!message.contains("...") && !message.contains("ing")) {
-              clearStatusAfterDelay(_categoryDownloadStatus, duration, isError)
-          }
-      }
 
      private fun postBundleDownloadStatus(message: String, duration: Long = 4000L, isError: Boolean = false) {
          _bundleDownloadStatus.value = message
