@@ -23,23 +23,31 @@
         <include layout="@layout/item_more_info"
             android:id="@+id/itemDeveloper" />
 
+        <!-- Added Total Memes Item -->
         <include layout="@layout/item_more_info"
-            android:id="@+id/itemSource" />
+            android:id="@+id/itemTotalMemes" />
+
+        <!-- Removed itemSource -->
 
         <include layout="@layout/item_more_info"
             android:id="@+id/itemSourceCode" />
 
+
         <include layout="@layout/item_more_header"
             android:id="@+id/headerContribute" />
 
+        <!-- Added Share App Item -->
         <include layout="@layout/item_more_info"
-            android:id="@+id/itemRateApp" />
+            android:id="@+id/itemShareApp" />
+
+        <!-- Removed itemRateApp -->
 
         <include layout="@layout/item_more_info"
             android:id="@+id/itemReportBug"/>
 
         <include layout="@layout/item_more_info"
             android:id="@+id/itemTranslate"/>
+
 
         <include layout="@layout/item_more_header"
             android:id="@+id/headerMore" />
