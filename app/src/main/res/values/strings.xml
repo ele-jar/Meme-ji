@@ -43,7 +43,7 @@
     <string name="more_translate">Help Translate</string>
     <string name="more_translate_desc">Translate the app into other languages</string>
     <string name="settings">Settings</string>
-    <string name="more_settings_desc_action">Configure app preferences</string>
+    <string name="more_settings_desc_action">Configure app preferences</string> <!-- Updated -->
     <string name="settings_not_implemented">Settings not yet implemented.</string>
     <string name="more_socials">Developer Profile</string>
     <string name="more_socials_desc">Check out other projects</string>
@@ -67,26 +67,9 @@
     <string name="error_preparing_share">Could not prepare image for sharing.</string>
     <string name="share_error">Error sharing meme.</string>
     <string name="share_via">Share via</string>
-
-    <!-- **** ADD THIS LINE **** -->
-    <string name="action_search">Search</string>
-    <!-- *********************** -->
-
-    <string name="action_download_category">Download Category</string>
-    <string name="confirm_download_category_title">Download \'%1$s\' Memes?</string>
-    <string name="confirm_download_category_message">Download all %1$d memes in this category?</string>
-    <string name="confirm_download_category_message_zip">Download all %1$d memes in this category as a ZIP file?</string>
-    <string name="download_one_by_one">Download One by One</string>
-    <string name="download_as_zip">Download as ZIP</string>
+    <string name="action_search">Search</string> <!-- Renamed from action_search -->
+    <!-- Removed strings related to category download -->
     <string name="cancel">Cancel</string>
-    <string name="no_memes_to_download">No memes to download in this category.</string>
-    <string name="started_multiple_downloads">Started %1$d downloads.</string>
-    <string name="preparing_zip">Preparing ZIP file...</string>
-    <string name="zip_download_success">ZIP file saved: %1$s</string>
-    <string name="zip_download_failed">Failed to create or save ZIP file: %1$s</string>
-    <string name="creating_zip">Creating ZIP: %1$s...</string>
-    <string name="downloading_for_zip">Downloading image %1$d of %2$d for ZIP...</string>
-    <string name="error_downloading_for_zip">Error downloading image for ZIP.</string>
 
     <string name="download_classic_bundle">Classic Memes Bundle</string>
     <string name="download_sad_bundle">Sad Memes Bundle</string>
@@ -98,7 +81,5 @@
     <string name="title_more">More</string>
 
     <string name="download_failed_single">Failed to start download for %1$s.</string>
-    <string name="download_one_by_one_complete">Started %1$d / %2$d downloads.</string>
-    <string name="zip_download_cancelled">ZIP download cancelled.</string>
 
 </resources>
