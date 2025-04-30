@@ -40,7 +40,6 @@
         <!-- Customize your theme here. -->
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
-        <!-- **** Force light icons/text on status bar for dark theme **** -->
         <item name="android:windowLightStatusBar" tools:targetApi="m">false</item>
         <item name="android:enforceNavigationBarContrast" tools:targetApi="q">false</item>
         <item name="android:enforceStatusBarContrast" tools:targetApi="q">false</item>
@@ -55,8 +54,6 @@
         <item name="bottomNavigationStyle">@style/Widget.App.BottomNavigationView</item>
         <item name="materialCardViewStyle">@style/Widget.App.CardView</item>
         <item name="materialAlertDialogTheme">@style/ThemeOverlay.App.MaterialAlertDialog</item>
-        <!-- NOTE: searchViewStyle removed as we target the icon color via Toolbar overlay -->
-        <!-- NOTE: colorControlNormal removed from base theme as we use Toolbar overlay -->
 
     </style>
 
@@ -64,19 +61,20 @@
 
     <!-- Component Styles -->
     <style name="Widget.App.Toolbar" parent="Widget.Material3.Toolbar.Surface">
-        <!-- **** Apply the theme overlay to the toolbar **** -->
+        <!-- Apply the theme overlay to the toolbar -->
         <item name="android:theme">@style/ThemeOverlay.App.Toolbar</item>
         <!-- Use popupTheme for the overflow menu -->
-        <item name="popupTheme">@style/ThemeOverlay.AppCompat.Dark</item>
+        <!-- Using Material3 popup theme appropriate for dark background -->
+        <item name="popupTheme">@style/ThemeOverlay.Material3.Dark</item>
     </style>
 
-    <!-- **** Toolbar Theme Overlay to control icon colors **** -->
-    <style name="ThemeOverlay.App.Toolbar" parent="ThemeOverlay.MaterialComponents.Toolbar.Primary">
+    <!-- Toolbar Theme Overlay using Material 3 parent -->
+    <style name="ThemeOverlay.App.Toolbar" parent="ThemeOverlay.Material3.Toolbar.Surface">
         <!-- Sets color for icons like back, search, overflow -->
         <item name="colorControlNormal">@android:color/white</item>
-        <!-- Optional: Set title text color if needed -->
+        <!-- Set title text color to white -->
         <item name="android:textColorPrimary">@android:color/white</item>
-        <!-- Optional: Set subtitle text color if needed -->
+        <!-- Optional: Set subtitle text color if needed (e.g., slightly transparent white) -->
         <!-- <item name="android:textColorSecondary">#B3FFFFFF</item> -->
     </style>
 
