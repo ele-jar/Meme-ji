@@ -27,30 +27,34 @@
     <string name="bundle_download_cancelled">Download for %1$s cancelled.</string>
     <string name="version">Version</string>
     <string name="developer">Developer</string>
-    <string name="developer_name">Your Name / Company</string>
-    <string name="data_source_title">Meme Data Source</string>
-    <string name="data_source_url">raw.githubusercontent.com/.../memes.json</string>
+    <string name="developer_name">ele-jar</string> 
+    
+    <string name="total_memes_title">Total Memes</string> 
+    <string name="total_memes_loading">Loading count...</string> 
+    <string name="total_memes_desc">Total available memes in the database</string> 
     <string name="source_code_title">Source Code</string>
-    <string name="source_code_url">github.com/YourRepo/MemesJi</string>
+    <string name="source_code_url">github.com/ele-jar/Meme-ji</string> 
     <string name="more_header_info">Information</string>
     <string name="more_header_contribute">Contribute</string>
     <string name="more_header_more">More</string>
     <string name="more_header_downloads">Downloads</string>
-    <string name="more_rate_app">Rate App</string>
-    <string name="more_rate_app_desc">Leave a review on the Play Store</string>
+    <string name="share_app_title">Share App</string> 
+    <string name="share_app_desc">Share this app with friends</string> 
+    <string name="share_app_subject">Check out Memes Ji App!</string> 
+    <string name="share_app_text">Hey! Check out this cool meme app I found - Memes Ji: https://github.com/ele-jar/Meme-ji/actions/runs/14755718284/artifacts/3037878455</string> 
     <string name="more_report_bug">Report a Bug</string>
     <string name="more_report_bug_desc">Found an issue? Let us know</string>
     <string name="more_translate">Help Translate</string>
     <string name="more_translate_desc">Translate the app into other languages</string>
     <string name="settings">Settings</string>
-    <string name="more_settings_desc_action">Configure app preferences</string> <!-- Updated -->
+    <string name="more_settings_desc_action">Configure app preferences</string>
     <string name="settings_not_implemented">Settings not yet implemented.</string>
     <string name="more_socials">Developer Profile</string>
     <string name="more_socials_desc">Check out other projects</string>
     <string name="could_not_open_link">Could not open the link.</string>
-    <string name="url_report_bug">https://github.com/YourRepo/MemesJi/issues</string>
-    <string name="url_translate">https://link.to.your.translation.platform</string>
-    <string name="url_developer_profile">https://github.com/YourUsername</string>
+    <string name="url_report_bug">https://github.com/ele-jar/Meme-ji/issues</string> <!-- Updated -->
+    <string name="url_translate">https://github.com/ele-jar/Meme-ji#translation</string> <!-- Updated (example) -->
+    <string name="url_developer_profile">https://github.com/ele-jar</string> <!-- Updated -->
     <string name="error_network">Network error. Please check your connection.</string>
 
     <string name="cutie_mode">Cutie Mode</string>
@@ -67,8 +71,8 @@
     <string name="error_preparing_share">Could not prepare image for sharing.</string>
     <string name="share_error">Error sharing meme.</string>
     <string name="share_via">Share via</string>
-    <string name="action_search">Search</string> <!-- Renamed from action_search -->
-    <!-- Removed strings related to category download -->
+    <string name="action_search">Search</string>
+    <string name="action_settings">Settings</string> <!-- Added for toolbar icon -->
     <string name="cancel">Cancel</string>
 
     <string name="download_classic_bundle">Classic Memes Bundle</string>
@@ -81,5 +85,4 @@
     <string name="title_more">More</string>
 
     <string name="download_failed_single">Failed to start download for %1$s.</string>
-
 </resources>
