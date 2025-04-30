@@ -56,22 +56,32 @@
         <item name="materialCardViewStyle">@style/Widget.App.CardView</item>
         <item name="materialAlertDialogTheme">@style/ThemeOverlay.App.MaterialAlertDialog</item>
 
+        <!-- Control color for icons like overflow, search, back etc. -->
+        <item name="colorControlNormal">@android:color/white</item>
+
     </style>
 
     <style name="Theme.MemesJi" parent="Base.Theme.MemesJi" />
 
     <!-- Component Styles -->
     <style name="Widget.App.Toolbar" parent="Widget.Material3.Toolbar.Surface">
-        <!-- Add custom toolbar attributes if needed -->
+        <!-- If colorControlNormal doesn't work, you might need a theme overlay -->
+        <!-- <item name="android:theme">@style/ThemeOverlay.App.Toolbar</item> -->
     </style>
 
+    <!-- Optional Toolbar Theme Overlay (Use if colorControlNormal isn't enough) -->
+    <!--
+    <style name="ThemeOverlay.App.Toolbar" parent="ThemeOverlay.MaterialComponents.Toolbar.Primary">
+        <item name="colorControlNormal">@android:color/white</item>
+        <item name="android:textColorSecondary">#B3FFFFFF</item>  <!- Example: Slightly transparent white ->
+    </style>
+    -->
+
     <style name="Widget.App.BottomNavigationView" parent="Widget.Material3.BottomNavigationView">
-        <!-- Add custom BottomNav attributes if needed -->
-        <!-- Example: <item name="itemActiveIndicatorStyle">@style/App.BottomNavigationView.ActiveIndicator</item> -->
     </style>
 
      <style name="Widget.App.CardView" parent="Widget.Material3.CardView.Elevated">
-         <item name="cardCornerRadius">12dp</item> <!-- Example customization -->
+         <item name="cardCornerRadius">12dp</item>
      </style>
 
     <!-- Dialog Theme -->
@@ -94,27 +104,20 @@
 
      <style name="ShapeAppearance.App.Dialog" parent="ShapeAppearance.Material3.LargeComponent">
         <item name="cornerFamily">rounded</item>
-        <item name="cornerSize">28dp</item> <!-- Standard M3 Dialog corner radius -->
+        <item name="cornerSize">28dp</item>
     </style>
 
     <style name="MaterialAlertDialog.App.Title.Text" parent="MaterialAlertDialog.Material3.Title.Text">
-        <!-- Title text customizations -->
     </style>
 
     <style name="MaterialAlertDialog.App.Body.Text" parent="MaterialAlertDialog.Material3.Body.Text">
-         <!-- Body text customizations -->
     </style>
 
-     <!-- Button Styles (Optional, can inherit) -->
-    <style name="Widget.App.Button" parent="Widget.Material3.Button">
-        <!-- Filled button customizations -->
+     <style name="Widget.App.Button" parent="Widget.Material3.Button">
     </style>
      <style name="Widget.App.Button.TextButton" parent="Widget.Material3.Button.TextButton">
-         <!-- Text button customizations -->
      </style>
 
-
-    <!-- Animation Style for Dialog -->
      <style name="DialogAnimation">
         <item name="android:windowEnterAnimation">@android:anim/fade_in</item>
         <item name="android:windowExitAnimation">@android:anim/fade_out</item>
