@@ -31,7 +31,8 @@ import androidx.navigation.ui.setupWithNavController
 import com.example.memesji.R
 import com.example.memesji.data.Meme
 import com.example.memesji.databinding.ActivityMainBinding
-import com.example.memesji.ui.fragments.CategoryMemesFragment // Still needed for downloadMeme maybe? Check usage. Keep for now.
+import com.example.memesji.ui.fragments.CategoryMemesFragment
+import com.example.memesji.ui.fragments.MoreFragmentDirections // Import directions
 import com.example.memesji.viewmodel.MemeViewModel
 import com.google.android.material.color.DynamicColors
 import com.google.android.material.snackbar.Snackbar
@@ -116,7 +117,7 @@ class MainActivity : AppCompatActivity() {
                 }
             }
 
-             invalidateMenu() // Still needed to show/hide search
+             invalidateMenu()
         }
 
         setupMenuProvider()
@@ -128,7 +129,7 @@ class MainActivity : AppCompatActivity() {
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
                 menuInflater.inflate(R.menu.main_menu, menu)
                 val searchItem = menu.findItem(R.id.action_search)
-                // Removed reference to downloadCategoryItem
+                val settingsItem = menu.findItem(R.id.action_settings_toolbar) // Get settings item
                 val searchView = searchItem?.actionView as? SearchView
 
                 val currentDestinationId = navController.currentDestination?.id
@@ -137,10 +138,10 @@ class MainActivity : AppCompatActivity() {
                         currentDestinationId == R.id.categoryMemesFragment ||
                         currentDestinationId == R.id.categoriesFragment
 
-                // Removed visibility control for downloadCategoryItem
+                val showSettings = currentDestinationId == R.id.moreFragment // Show only on More screen
 
                 searchItem?.isVisible = showSearch
-                // downloadCategoryItem?.isVisible = showDownload // Removed
+                settingsItem?.isVisible = showSettings // Control visibility
 
                 if(showSearch) {
                     searchView?.queryHint = when (currentDestinationId) {
@@ -172,8 +173,15 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-                 // Removed handling for R.id.action_download_category
-                return false // Return false if not handled here
+                // Handle settings icon click
+                if (menuItem.itemId == R.id.action_settings_toolbar) {
+                    // Ensure we are on the MoreFragment before navigating
+                    if (navController.currentDestination?.id == R.id.moreFragment) {
+                         navController.navigate(MoreFragmentDirections.actionMoreFragmentToSettingsFragment())
+                    }
+                    return true
+                 }
+                return false
             }
         }, this, Lifecycle.State.RESUMED)
     }
