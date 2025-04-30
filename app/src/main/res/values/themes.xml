@@ -40,7 +40,7 @@
         <!-- Customize your theme here. -->
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
-        <!-- Ensure status bar icons are LIGHT -->
+        <!-- **** Force light icons/text on status bar for dark theme **** -->
         <item name="android:windowLightStatusBar" tools:targetApi="m">false</item>
         <item name="android:enforceNavigationBarContrast" tools:targetApi="q">false</item>
         <item name="android:enforceStatusBarContrast" tools:targetApi="q">false</item>
@@ -55,27 +55,28 @@
         <item name="bottomNavigationStyle">@style/Widget.App.BottomNavigationView</item>
         <item name="materialCardViewStyle">@style/Widget.App.CardView</item>
         <item name="materialAlertDialogTheme">@style/ThemeOverlay.App.MaterialAlertDialog</item>
-
-        <!-- REMOVED searchViewStyle item -->
-        <!-- REMOVED colorControlNormal from here, moved to toolbar overlay -->
+        <!-- NOTE: searchViewStyle removed as we target the icon color via Toolbar overlay -->
+        <!-- NOTE: colorControlNormal removed from base theme as we use Toolbar overlay -->
 
     </style>
 
     <style name="Theme.MemesJi" parent="Base.Theme.MemesJi" />
 
-    <!-- Toolbar Style - Apply the Theme Overlay -->
+    <!-- Component Styles -->
     <style name="Widget.App.Toolbar" parent="Widget.Material3.Toolbar.Surface">
-         <item name="android:theme">@style/ThemeOverlay.App.Toolbar</item>
-         <item name="popupTheme">@style/ThemeOverlay.AppCompat.Light</item> <!-- Theme for popup menus -->
+        <!-- **** Apply the theme overlay to the toolbar **** -->
+        <item name="android:theme">@style/ThemeOverlay.App.Toolbar</item>
+        <!-- Use popupTheme for the overflow menu -->
+        <item name="popupTheme">@style/ThemeOverlay.AppCompat.Dark</item>
     </style>
 
-    <!-- Toolbar Theme Overlay - To set icon colors -->
+    <!-- **** Toolbar Theme Overlay to control icon colors **** -->
     <style name="ThemeOverlay.App.Toolbar" parent="ThemeOverlay.MaterialComponents.Toolbar.Primary">
-        <!-- Color for navigation icon (back arrow), action icons (search, overflow) -->
+        <!-- Sets color for icons like back, search, overflow -->
         <item name="colorControlNormal">@android:color/white</item>
-        <!-- Optional: Color for title text if needed -->
-        <!-- <item name="android:textColorPrimary">@android:color/white</item> -->
-        <!-- Optional: Color for subtitle text if needed -->
+        <!-- Optional: Set title text color if needed -->
+        <item name="android:textColorPrimary">@android:color/white</item>
+        <!-- Optional: Set subtitle text color if needed -->
         <!-- <item name="android:textColorSecondary">#B3FFFFFF</item> -->
     </style>
 
@@ -85,8 +86,6 @@
      <style name="Widget.App.CardView" parent="Widget.Material3.CardView.Elevated">
          <item name="cardCornerRadius">12dp</item>
      </style>
-
-    <!-- REMOVED Widget.App.SearchView style definition -->
 
     <!-- Dialog Theme -->
     <style name="ThemeOverlay.App.MaterialAlertDialog" parent="ThemeOverlay.Material3.MaterialAlertDialog">
