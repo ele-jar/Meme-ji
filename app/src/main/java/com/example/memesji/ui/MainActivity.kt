@@ -31,7 +31,7 @@ import androidx.navigation.ui.setupWithNavController
 import com.example.memesji.R
 import com.example.memesji.data.Meme
 import com.example.memesji.databinding.ActivityMainBinding
-import com.example.memesji.ui.fragments.CategoryMemesFragment
+import com.example.memesji.ui.fragments.CategoryMemesFragment // Still needed for downloadMeme maybe? Check usage. Keep for now.
 import com.example.memesji.viewmodel.MemeViewModel
 import com.google.android.material.color.DynamicColors
 import com.google.android.material.snackbar.Snackbar
@@ -81,10 +81,6 @@ class MainActivity : AppCompatActivity() {
         binding.bottomNavView.setupWithNavController(navController)
 
         navController.addOnDestinationChangedListener { _, destination, arguments ->
-            val isTopLevel = appBarConfiguration.topLevelDestinations.contains(destination.id)
-            val isCategoryMemes = destination.id == R.id.categoryMemesFragment
-            val isSettings = destination.id == R.id.settingsFragment
-
             binding.toolbar.isVisible = true
 
             when (destination.id) {
@@ -120,7 +116,7 @@ class MainActivity : AppCompatActivity() {
                 }
             }
 
-             invalidateMenu()
+             invalidateMenu() // Still needed to show/hide search
         }
 
         setupMenuProvider()
@@ -132,7 +128,7 @@ class MainActivity : AppCompatActivity() {
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
                 menuInflater.inflate(R.menu.main_menu, menu)
                 val searchItem = menu.findItem(R.id.action_search)
-                val downloadCategoryItem = menu.findItem(R.id.action_download_category)
+                // Removed reference to downloadCategoryItem
                 val searchView = searchItem?.actionView as? SearchView
 
                 val currentDestinationId = navController.currentDestination?.id
@@ -141,10 +137,10 @@ class MainActivity : AppCompatActivity() {
                         currentDestinationId == R.id.categoryMemesFragment ||
                         currentDestinationId == R.id.categoriesFragment
 
-                val showDownload = currentDestinationId == R.id.categoryMemesFragment
+                // Removed visibility control for downloadCategoryItem
 
                 searchItem?.isVisible = showSearch
-                downloadCategoryItem?.isVisible = showDownload
+                // downloadCategoryItem?.isVisible = showDownload // Removed
 
                 if(showSearch) {
                     searchView?.queryHint = when (currentDestinationId) {
@@ -176,17 +172,8 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-                 if (menuItem.itemId == R.id.action_download_category) {
-                     val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment)
-                     val currentFragment = navHostFragment?.childFragmentManager?.fragments?.get(0)
-                     if (currentFragment is CategoryMemesFragment) {
-                         currentFragment.showCategoryDownloadOptions()
-                     } else {
-                         Log.e("MainActivity", "Could not find CategoryMemesFragment to trigger download options.")
-                     }
-                     return true
-                 }
-                return false
+                 // Removed handling for R.id.action_download_category
+                return false // Return false if not handled here
             }
         }, this, Lifecycle.State.RESUMED)
     }
