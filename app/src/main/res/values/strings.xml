@@ -67,6 +67,11 @@
     <string name="error_preparing_share">Could not prepare image for sharing.</string>
     <string name="share_error">Error sharing meme.</string>
     <string name="share_via">Share via</string>
+
+    <!-- **** ADD THIS LINE **** -->
+    <string name="action_search">Search</string>
+    <!-- *********************** -->
+
     <string name="action_download_category">Download Category</string>
     <string name="confirm_download_category_title">Download \'%1$s\' Memes?</string>
     <string name="confirm_download_category_message">Download all %1$d memes in this category?</string>
