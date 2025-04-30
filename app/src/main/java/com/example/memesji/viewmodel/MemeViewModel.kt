@@ -40,7 +40,9 @@ class MemeViewModel(application: Application) : AndroidViewModel(application) {
     )
 
     private val _rawMemes = MutableLiveData<List<Meme>>()
-    val totalMemeCount: LiveData<Int> = Transformations.map(_rawMemes) { it?.size ?: 0 } // Expose count
+    // Change totalMemeCount implementation
+    private val _totalMemeCount = MediatorLiveData<Int>().apply { value = 0 }
+    val totalMemeCount: LiveData<Int> get() = _totalMemeCount
 
     private val _rawCategories = MutableLiveData<List<CategoryItem>>()
 
@@ -91,6 +93,10 @@ class MemeViewModel(application: Application) : AndroidViewModel(application) {
     init {
         _isCutieModeEnabled.value = PreferencesHelper.isCutieModeEnabled(_applicationContext)
         setupMediators()
+        // Update total count when raw memes change
+        _totalMemeCount.addSource(_rawMemes) { memes ->
+            _totalMemeCount.value = memes?.size ?: 0
+        }
         loadMemes(forceRefresh = false)
     }
 
@@ -194,7 +200,7 @@ class MemeViewModel(application: Application) : AndroidViewModel(application) {
 
             val result = repository.getMemes(forceRefresh = forceRefresh)
             result.onSuccess { memeList ->
-                _rawMemes.value = memeList // Update raw list, triggers totalMemeCount
+                _rawMemes.value = memeList // This will trigger the _totalMemeCount update
                 _rawCategories.value = repository.getCategoriesWithImages()
                 Log.d("MemeViewModel", "Loaded ${memeList.size} raw memes, ${_rawCategories.value?.size ?: 0} categories.")
             }.onFailure { throwable ->
@@ -330,7 +336,6 @@ class MemeViewModel(application: Application) : AndroidViewModel(application) {
          }
      }
 
-    // Removed category download related functions
 
     @RequiresApi(Build.VERSION_CODES.Q)
     private fun markMediaStoreDownloadComplete(pendingFile: File) {
@@ -387,6 +392,7 @@ class MemeViewModel(application: Application) : AndroidViewModel(application) {
      fun clearBundleDownloadStatus() {
         _bundleDownloadStatus.value = null
     }
+
 
      private fun postBundleDownloadStatus(message: String, duration: Long = 4000L, isError: Boolean = false) {
          _bundleDownloadStatus.value = message
