@@ -40,7 +40,8 @@
         <!-- Customize your theme here. -->
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
-        <item name="android:windowLightStatusBar" tools:targetApi="m">false</item> <!-- Ensures light status icons -->
+        <!-- Ensure status bar icons are LIGHT -->
+        <item name="android:windowLightStatusBar" tools:targetApi="m">false</item>
         <item name="android:enforceNavigationBarContrast" tools:targetApi="q">false</item>
         <item name="android:enforceStatusBarContrast" tools:targetApi="q">false</item>
 
@@ -49,37 +50,34 @@
         <item name="android:windowEnterTransition">@android:transition/fade</item>
         <item name="android:windowExitTransition">@android:transition/fade</item>
 
-
         <!-- Component Styles -->
         <item name="toolbarStyle">@style/Widget.App.Toolbar</item>
         <item name="bottomNavigationStyle">@style/Widget.App.BottomNavigationView</item>
         <item name="materialCardViewStyle">@style/Widget.App.CardView</item>
         <item name="materialAlertDialogTheme">@style/ThemeOverlay.App.MaterialAlertDialog</item>
 
-        <!-- REMOVED colorControlNormal from base theme -->
+        <!-- REMOVED searchViewStyle item -->
+        <!-- REMOVED colorControlNormal from here, moved to toolbar overlay -->
 
     </style>
 
     <style name="Theme.MemesJi" parent="Base.Theme.MemesJi" />
 
-    <!-- Toolbar Style applying the overlay -->
+    <!-- Toolbar Style - Apply the Theme Overlay -->
     <style name="Widget.App.Toolbar" parent="Widget.Material3.Toolbar.Surface">
          <item name="android:theme">@style/ThemeOverlay.App.Toolbar</item>
-         <item name="popupTheme">@style/ThemeOverlay.AppCompat.Dark</item> <!-- For popup menu theme -->
+         <item name="popupTheme">@style/ThemeOverlay.AppCompat.Light</item> <!-- Theme for popup menus -->
     </style>
 
-    <!-- Toolbar Theme Overlay -->
-    <style name="ThemeOverlay.App.Toolbar" parent=""> <!-- Use empty parent or ThemeOverlay.AppCompat.ActionBar -->
-        <!-- Controls color of icons like back, search, overflow -->
-        <item name="colorControlNormal">@color/md_theme_onSurface</item>
-         <!-- Controls color of text based menu items -->
-        <item name="actionMenuTextColor">@color/md_theme_onSurface</item>
-        <!-- Controls title text color -->
-        <item name="android:textColorPrimary">@color/md_theme_onSurface</item>
-        <!-- Controls subtitle text color -->
-        <item name="android:textColorSecondary">@color/md_theme_onSurfaceVariant</item>
+    <!-- Toolbar Theme Overlay - To set icon colors -->
+    <style name="ThemeOverlay.App.Toolbar" parent="ThemeOverlay.MaterialComponents.Toolbar.Primary">
+        <!-- Color for navigation icon (back arrow), action icons (search, overflow) -->
+        <item name="colorControlNormal">@android:color/white</item>
+        <!-- Optional: Color for title text if needed -->
+        <!-- <item name="android:textColorPrimary">@android:color/white</item> -->
+        <!-- Optional: Color for subtitle text if needed -->
+        <!-- <item name="android:textColorSecondary">#B3FFFFFF</item> -->
     </style>
-
 
     <style name="Widget.App.BottomNavigationView" parent="Widget.Material3.BottomNavigationView">
     </style>
@@ -87,6 +85,8 @@
      <style name="Widget.App.CardView" parent="Widget.Material3.CardView.Elevated">
          <item name="cardCornerRadius">12dp</item>
      </style>
+
+    <!-- REMOVED Widget.App.SearchView style definition -->
 
     <!-- Dialog Theme -->
     <style name="ThemeOverlay.App.MaterialAlertDialog" parent="ThemeOverlay.Material3.MaterialAlertDialog">
