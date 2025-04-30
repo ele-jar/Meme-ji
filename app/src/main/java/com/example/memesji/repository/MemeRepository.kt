@@ -156,7 +156,6 @@ class MemeRepository(
              val cacheDir = File(context.cacheDir, "share_cache")
              cacheDir.mkdirs()
 
-             // Determine extension primarily from original URL, fallback to cache file
              val urlExtension = meme.url.substringAfterLast('.', "").lowercase(Locale.ROOT)
              val cacheExtension = fileFromCache.name.substringAfterLast('.', "").lowercase(Locale.ROOT)
              val extension = if (urlExtension.isNotEmpty() && urlExtension.length <= 4) urlExtension else cacheExtension
@@ -170,7 +169,6 @@ class MemeRepository(
              Log.d("MemeRepository", "Sharing Prep - Target File: ${targetFile.path}")
              Log.d("MemeRepository", "Sharing Prep - Determined Extension: '$extension'")
 
-             // Ensure targetFile exists (even if empty) before generating URI
              withContext(Dispatchers.IO) {
                  if (!targetFile.exists()) {
                      targetFile.createNewFile()
@@ -184,7 +182,6 @@ class MemeRepository(
              )
              Log.d("MemeRepository", "Sharing Prep - Generated URI: $uri")
 
-             // Now copy the content
              withContext(Dispatchers.IO) {
                  fileFromCache.inputStream().use { input ->
                      targetFile.outputStream().use { output ->
@@ -194,7 +191,6 @@ class MemeRepository(
                  Log.d("MemeRepository", "Sharing Prep - Copied content from cache to target file")
              }
 
-             // Determine MIME type from the reliable extension
              val mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)?.also {
                  Log.d("MemeRepository", "Sharing Prep - MimeTypeMap result: $it")
              } ?: run {
@@ -239,97 +235,7 @@ class MemeRepository(
          }
      }
 
-     suspend fun downloadMemesAsZip(
-         categoryName: String,
-         memes: List<Meme>,
-         progressCallback: (String) -> Unit
-     ): Result<File> = withContext(Dispatchers.IO) {
-         val tempDir = File(context.cacheDir, "temp_zip_$categoryName")
-         val safeCategoryName = makeFilenameSafe(categoryName)
-         val zipFileName = "${safeCategoryName}_Memes_${memes.size}.zip"
-         var zipFile: File? = null
-         var outputStream: OutputStream? = null
-         var zipOutputStream: ZipOutputStream? = null
-
-         try {
-             if (tempDir.exists()) tempDir.deleteRecursively()
-             tempDir.mkdirs()
-             Log.d("MemeRepository", "Created temp directory: ${tempDir.path}")
-
-             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                  outputStream = createOutputStreamQ(zipFileName, context)
-                  zipFile = File(context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS), zipFileName)
-                  Log.d("MemeRepository", "Using MediaStore for $zipFileName")
-             } else {
-                  val downloadsDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
-                  if (!downloadsDir.exists()) downloadsDir.mkdirs()
-                  zipFile = File(downloadsDir, zipFileName)
-                  outputStream = FileOutputStream(zipFile)
-                  Log.d("MemeRepository", "Using legacy storage for ${zipFile.path}")
-             }
-
-             if (outputStream == null) {
-                 throw IOException("Could not create output stream for ZIP file")
-             }
-
-             zipOutputStream = ZipOutputStream(BufferedOutputStream(outputStream))
-
-             memes.forEachIndexed { index, meme ->
-                 if (!isActive) {
-                      Log.w("MemeRepository", "Zip creation cancelled")
-                      throw kotlinx.coroutines.CancellationException("Zip creation cancelled")
-                  }
-                 val fileExtension = meme.url.substringAfterLast('.', "jpg")
-                 val safeEntryName = makeFilenameSafe(meme.name)
-                 val entryName = "$safeEntryName.$fileExtension"
-                 val tempFile = File(tempDir, entryName)
-
-                 progressCallback(context.getString(R.string.downloading_for_zip, index + 1, memes.size))
-                 Log.d("MemeRepository", "Downloading meme ${index + 1}/${memes.size}: ${meme.name} from ${meme.url}")
-
-                 try {
-                     downloadFile(meme.url, tempFile)
-                     Log.d("MemeRepository", "Downloaded ${meme.name} to ${tempFile.path}")
-
-                     zipOutputStream.putNextEntry(ZipEntry(entryName))
-                     FileInputStream(tempFile).use { fis ->
-                         fis.copyTo(zipOutputStream)
-                     }
-                     zipOutputStream.closeEntry()
-                     Log.v("MemeRepository", "Added $entryName to zip")
-                     tempFile.delete()
-                  } catch (e: Exception) {
-                      Log.e("MemeRepository", "Failed to download or add ${meme.name} to zip", e)
-                  }
-             }
-
-             progressCallback(context.getString(R.string.creating_zip, zipFileName))
-             zipOutputStream.flush()
-             Log.d("MemeRepository", "Zip file creation finished for: $zipFileName")
-             Result.success(zipFile ?: File(zipFileName))
-
-         } catch (e: Exception) {
-             Log.e("MemeRepository", "Error creating zip file for $categoryName", e)
-             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && outputStream != null) {
-                  deleteIncompleteMediaStoreEntry(zipFileName, context)
-              } else {
-                  zipFile?.delete()
-              }
-             Result.failure(e)
-         } finally {
-             try {
-                 zipOutputStream?.close()
-                 outputStream?.close()
-                 if (tempDir.exists()) {
-                     tempDir.deleteRecursively()
-                     Log.d("MemeRepository", "Deleted temp directory: ${tempDir.path}")
-                 }
-             } catch (ioe: IOException) {
-                  Log.e("MemeRepository", "Error closing streams or deleting temp dir", ioe)
-             }
-         }
-     }
-
+     // Removed downloadMemesAsZip function
 
     @RequiresApi(Build.VERSION_CODES.Q)
       private fun createOutputStreamQ(fileName: String, context: Context): OutputStream? {
@@ -460,6 +366,6 @@ class MemeRepository(
               Log.e("MemeRepository", "Error downloading or unzipping bundle from $bundleUrl", e)
               destinationDir.deleteRecursively()
               Result.failure(e)
-              } 
+              }
      }
- }
+}
