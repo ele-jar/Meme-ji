@@ -10,4 +10,11 @@
         app:showAsAction="ifRoom|collapseActionView"
         app:actionViewClass="androidx.appcompat.widget.SearchView" />
 
+    <!-- Added Settings Icon for Toolbar -->
+    <item
+        android:id="@+id/action_settings_toolbar"
+        android:icon="@drawable/ic_settings"
+        android:title="@string/action_settings"
+        app:showAsAction="ifRoom" />
+
 </menu>
