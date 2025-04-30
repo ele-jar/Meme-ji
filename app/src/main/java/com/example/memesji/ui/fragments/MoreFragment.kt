@@ -85,33 +85,32 @@ class MoreFragment : Fragment() {
         }
         binding.itemDeveloper.apply {
             primaryText.text = getString(R.string.developer)
-            secondaryText.text = getString(R.string.developer_name)
+            secondaryText.text = getString(R.string.developer_name) // Updated string used here
             secondaryText.isVisible = true
             icon.setImageResource(R.drawable.ic_person_outline)
         }
-        binding.itemSource.apply {
-            primaryText.text = getString(R.string.data_source_title)
-            secondaryText.text = getString(R.string.data_source_url)
+        binding.itemTotalMemes.apply {
+            primaryText.text = getString(R.string.total_memes_title)
+            secondaryText.text = getString(R.string.total_memes_loading) // Placeholder
             secondaryText.isVisible = true
-            icon.setImageResource(R.drawable.ic_database)
-             root.setOnClickListener { openUrl("https://" + getString(R.string.data_source_url)) }
+            icon.setImageResource(R.drawable.ic_counter) // Replace with suitable icon if needed
         }
          binding.itemSourceCode.apply {
              primaryText.text = getString(R.string.source_code_title)
              secondaryText.text = getString(R.string.source_code_url)
              secondaryText.isVisible = true
              icon.setImageResource(R.drawable.ic_code)
-              root.setOnClickListener { openUrl("https://" + getString(R.string.source_code_url)) }
+             root.setOnClickListener { openUrl("https://" + getString(R.string.source_code_url)) }
          }
     }
 
 
     private fun setupContributeSection() {
-        binding.itemRateApp.apply {
-             primaryText.text = getString(R.string.more_rate_app)
-             secondaryText.text = getString(R.string.more_rate_app_desc)
+        binding.itemShareApp.apply {
+             primaryText.text = getString(R.string.share_app_title)
+             secondaryText.text = getString(R.string.share_app_desc)
              secondaryText.isVisible = true
-             icon.setImageResource(R.drawable.ic_star_rate)
+             icon.setImageResource(R.drawable.ic_share) // Use share icon
          }
          binding.itemReportBug.apply {
              primaryText.text = getString(R.string.more_report_bug)
@@ -146,13 +145,14 @@ class MoreFragment : Fragment() {
 
     private fun setupClickListeners() {
 
-        binding.itemRateApp.root.setOnClickListener { openPlayStoreForRating() }
-        binding.itemReportBug.root.setOnClickListener { openUrl(getString(R.string.url_report_bug)) }
+        binding.itemShareApp.root.setOnClickListener { shareApp() } // Share app listener
+        binding.itemReportBug.root.setOnClickListener { openUrl(getString(R.string.url_report_bug)) } // Updated URL used
         binding.itemTranslate.root.setOnClickListener { openUrl(getString(R.string.url_translate)) }
         binding.itemSettings.root.setOnClickListener {
             findNavController().navigate(MoreFragmentDirections.actionMoreFragmentToSettingsFragment())
         }
-        binding.itemSocials.root.setOnClickListener { openUrl(getString(R.string.url_developer_profile)) }
+        binding.itemSocials.root.setOnClickListener { openUrl(getString(R.string.url_developer_profile)) } // Updated URL used
+
 
         binding.buttonDownloadClassic.setOnClickListener {
             downloadBundle("Classic Memes", memeBundles["Classic Memes"])
@@ -164,8 +164,8 @@ class MoreFragment : Fragment() {
             downloadBundle("Relatable Memes", memeBundles["Relatable Memes"])
         }
 
-         binding.itemSource.root.setOnClickListener { openUrl("https://" + getString(R.string.data_source_url)) }
-         binding.itemSourceCode.root.setOnClickListener { openUrl("https://" + getString(R.string.source_code_url)) }
+         // Removed itemSource click listener
+         binding.itemSourceCode.root.setOnClickListener { openUrl("https://" + getString(R.string.source_code_url)) } // Updated URL used
     }
 
     private fun downloadBundle(bundleName: String, bundleUrl: String?) {
@@ -175,6 +175,19 @@ class MoreFragment : Fragment() {
         }
         (activity as? MainActivity)?.requestStoragePermission {
             viewModel.downloadBundle(bundleName, bundleUrl)
+        }
+    }
+
+    private fun shareApp() {
+        try {
+            val shareIntent = Intent(Intent.ACTION_SEND)
+            shareIntent.type = "text/plain"
+            shareIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.share_app_subject))
+            shareIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.share_app_text))
+            startActivity(Intent.createChooser(shareIntent, getString(R.string.share_app_title)))
+        } catch (e: Exception) {
+            Toast.makeText(context, R.string.share_error, Toast.LENGTH_SHORT).show()
+            Log.e("MoreFragment", "Could not launch share intent", e)
         }
     }
 
@@ -203,6 +216,12 @@ class MoreFragment : Fragment() {
                   }
              }
          }
+
+         // Observe total meme count
+         viewModel.totalMemeCount.observe(viewLifecycleOwner) { count ->
+             binding.itemTotalMemes.secondaryText.text = count?.toString() ?: getString(R.string.total_memes_loading)
+             binding.itemTotalMemes.secondaryText.isVisible = true
+         }
      }
 
     private fun setDownloadButtonsEnabled(enabled: Boolean) {
@@ -211,7 +230,7 @@ class MoreFragment : Fragment() {
         binding.buttonDownloadRelatable.isEnabled = enabled
     }
 
-    private fun openPlayStoreForRating() {
+    private fun openPlayStoreForRating() { // Keep this function even if item removed, might be used elsewhere
         val packageName = context?.packageName ?: return
         try {
             startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=$packageName")))
@@ -223,8 +242,9 @@ class MoreFragment : Fragment() {
     }
 
     private fun openUrl(url: String) {
-         if (url.isBlank()) {
+         if (url.isBlank() || !url.startsWith("http")) { // Basic check for valid URL start
              Toast.makeText(context, R.string.could_not_open_link, Toast.LENGTH_SHORT).show()
+             Log.w("MoreFragment", "Attempted to open invalid URL: $url")
              return
          }
         try {
