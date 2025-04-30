@@ -47,7 +47,7 @@ class CategoryMemesFragment : Fragment() {
     private lateinit var memeAdapter: MemeAdapter
     private lateinit var layoutManager: GridLayoutManager
     private var detailDialog: Dialog? = null
-    private var categoryDownloadDialog: Dialog? = null
+    // Removed categoryDownloadDialog variable
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -156,12 +156,7 @@ class CategoryMemesFragment : Fragment() {
               }
           }
 
-         viewModel.categoryDownloadStatus.observe(viewLifecycleOwner) { status ->
-            status?.let {
-                 Snackbar.make(binding.root, it, Snackbar.LENGTH_LONG).show()
-                 viewModel.clearCategoryDownloadStatus()
-             }
-         }
+         // Removed observer for categoryDownloadStatus
     }
 
     private fun updateNoMemesText() {
@@ -269,41 +264,7 @@ class CategoryMemesFragment : Fragment() {
           }
       }
 
-     fun showCategoryDownloadOptions() {
-         val currentMemes = viewModel.filteredMemes.value ?: emptyList()
-         if (currentMemes.isEmpty()) {
-             Toast.makeText(context, R.string.no_memes_to_download, Toast.LENGTH_SHORT).show()
-             return
-         }
-
-          if (categoryDownloadDialog?.isShowing == true) {
-             categoryDownloadDialog?.dismiss()
-          }
-
-         categoryDownloadDialog = MaterialAlertDialogBuilder(requireContext())
-             .setTitle(getString(R.string.confirm_download_category_title, args.categoryName))
-             .setMessage(getString(R.string.confirm_download_category_message, currentMemes.size))
-             .setPositiveButton(R.string.download_one_by_one) { dialog, _ ->
-                 (activity as? MainActivity)?.requestStoragePermission {
-                     viewModel.downloadMemesOneByOne(currentMemes)
-                     val message = getString(R.string.started_multiple_downloads, currentMemes.size)
-                     Snackbar.make(binding.root, message, Snackbar.LENGTH_LONG).show()
-                 }
-                 dialog.dismiss()
-             }
-             .setNeutralButton(R.string.download_as_zip) { dialog, _ ->
-                  (activity as? MainActivity)?.requestStoragePermission {
-                     viewModel.downloadCategoryAsZip(args.categoryName, currentMemes)
-
-                 }
-                 dialog.dismiss()
-             }
-             .setNegativeButton(R.string.cancel) { dialog, _ ->
-                 dialog.dismiss()
-             }
-             .setOnDismissListener { categoryDownloadDialog = null }
-             .show()
-     }
+     // Removed showCategoryDownloadOptions function
 
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
@@ -314,14 +275,13 @@ class CategoryMemesFragment : Fragment() {
      override fun onPause() {
         super.onPause()
         detailDialog?.dismiss()
-        categoryDownloadDialog?.dismiss()
+        // Removed dismissal of categoryDownloadDialog
     }
 
     override fun onDestroyView() {
         detailDialog?.dismiss()
         detailDialog = null
-        categoryDownloadDialog?.dismiss()
-        categoryDownloadDialog = null
+        // Removed dismissal of categoryDownloadDialog
         super.onDestroyView()
         binding.recyclerViewCategoryMemes.adapter = null
         _binding = null
