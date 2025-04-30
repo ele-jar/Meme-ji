@@ -40,6 +40,8 @@ class MemeViewModel(application: Application) : AndroidViewModel(application) {
     )
 
     private val _rawMemes = MutableLiveData<List<Meme>>()
+    val totalMemeCount: LiveData<Int> = Transformations.map(_rawMemes) { it?.size ?: 0 } // Expose count
+
     private val _rawCategories = MutableLiveData<List<CategoryItem>>()
 
     private val _isCutieModeEnabled = MutableLiveData<Boolean>()
@@ -60,8 +62,6 @@ class MemeViewModel(application: Application) : AndroidViewModel(application) {
 
     private val _singleMemeDownloadStatus = MutableLiveData<String?>()
     val singleMemeDownloadStatus: LiveData<String?> get() = _singleMemeDownloadStatus
-
-    // Removed categoryDownloadStatus LiveData
 
     private val _searchQuery = MutableLiveData<String?>()
     val searchQuery: LiveData<String?> get() = _searchQuery
@@ -194,7 +194,7 @@ class MemeViewModel(application: Application) : AndroidViewModel(application) {
 
             val result = repository.getMemes(forceRefresh = forceRefresh)
             result.onSuccess { memeList ->
-                _rawMemes.value = memeList
+                _rawMemes.value = memeList // Update raw list, triggers totalMemeCount
                 _rawCategories.value = repository.getCategoriesWithImages()
                 Log.d("MemeViewModel", "Loaded ${memeList.size} raw memes, ${_rawCategories.value?.size ?: 0} categories.")
             }.onFailure { throwable ->
@@ -330,10 +330,7 @@ class MemeViewModel(application: Application) : AndroidViewModel(application) {
          }
      }
 
-     // Removed downloadMemesOneByOne function
-     // Removed downloadCategoryAsZip function
-     // Removed categoryDownloadStatus LiveData and related functions
-
+    // Removed category download related functions
 
     @RequiresApi(Build.VERSION_CODES.Q)
     private fun markMediaStoreDownloadComplete(pendingFile: File) {
@@ -382,8 +379,6 @@ class MemeViewModel(application: Application) : AndroidViewModel(application) {
           return fileName ?: file.name
       }
 
-     // Removed clearCategoryDownloadStatus function
-     // Removed postCategoryDownloadStatus function
 
      fun clearSingleMemeDownloadStatus() {
          _singleMemeDownloadStatus.value = null
