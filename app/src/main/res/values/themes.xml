@@ -66,16 +66,16 @@
     <!-- Component Styles -->
     <style name="Widget.App.Toolbar" parent="Widget.Material3.Toolbar.Surface">
         <!-- If colorControlNormal doesn't work, you might need a theme overlay -->
-        <!-- <item name="android:theme">@style/ThemeOverlay.App.Toolbar</item> -->
+         <item name="android:theme">@style/ThemeOverlay.App.Toolbar</item> 
     </style>
 
     <!-- Optional Toolbar Theme Overlay (Use if colorControlNormal isn't enough) -->
-    <!--
+    
     <style name="ThemeOverlay.App.Toolbar" parent="ThemeOverlay.MaterialComponents.Toolbar.Primary">
         <item name="colorControlNormal">@android:color/white</item>
-        <item name="android:textColorSecondary">#B3FFFFFF</item>  <!- Example: Slightly transparent white ->
+        <item name="android:textColorSecondary">#ffffff</item>  
     </style>
-    -->
+    
 
     <style name="Widget.App.BottomNavigationView" parent="Widget.Material3.BottomNavigationView">
     </style>
