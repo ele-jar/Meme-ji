@@ -38,7 +38,7 @@ android {
                 this.keyAlias = keyAlias
                 this.keyPassword = keyPassword
             } else {
-                 println("!!! Release signing config environment variables not set or keystore file not found. CI should provide secrets.")
+                println("!!! Release signing config environment variables not set or keystore file not found. CI should provide secrets.")
             }
         }
     }
@@ -53,9 +53,22 @@ android {
             signingConfig = signingConfigs.getByName("release")
         }
         debug {
-             isMinifyEnabled = false
+            isMinifyEnabled = false
         }
     }
+
+    
+    applicationVariants.all {
+        outputs.all {
+            val variant = this@all
+            val buildType = variant.buildType.name
+            val versionName = variant.versionName
+            if (buildType == "release") {
+                outputFileName = "Meme-ji-v${versionName}.apk"
+            }
+        }
+    }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
@@ -68,7 +81,6 @@ android {
         dataBinding = false
         buildConfig = true
     }
-
 }
 
 dependencies {
