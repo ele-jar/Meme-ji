@@ -45,7 +45,7 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = true
+            isMinifyEnabled = true // Keep this true for release builds
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -53,21 +53,33 @@ android {
             signingConfig = signingConfigs.getByName("release")
         }
         debug {
-            isMinifyEnabled = false
+             isMinifyEnabled = false
+             // Optionally use a debug signing key if needed locally, but not required for assembleDebug
+             // signingConfig = signingConfigs.getByName("debug")
         }
     }
 
     
-    applicationVariants.all {
-        outputs.all {
-            val variant = this@all
-            val buildType = variant.buildType.name
-            val versionName = variant.versionName
-            if (buildType == "release") {
-                outputFileName = "Meme-ji-v${versionName}.apk"
+    onVariantProperties {
+        // Check if it's the release build type
+        if (buildType == "release") {
+            // Access artifacts and modify the output APK name
+            artifacts.use {
+                it.get(com.android.build.api.artifact.SingleArtifact.APK)
+                    .toTransform(
+                        com.android.build.api.artifact.SingleArtifact.APK,
+                        { apkDirectory -> apkDirectory }, // Input directory
+                        { _ -> null }, // File filter (null means process all)
+                        { outputDirectory ->
+                            val version = versionName.getOrElse("unknown")
+                            File(outputDirectory, "Meme-ji-v${version}.apk")
+                        }
+                    )
             }
         }
     }
+    // --- End of New Variant API block ---
+
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
