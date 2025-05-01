@@ -31,7 +31,7 @@
     <string name="more_header_info">Information</string>
     <string name="more_header_contribute">Contribute</string>
     <string name="more_header_more">More</string>
-    <string name="more_header_update">App Update</string> <!-- Changed from Downloads -->
+    <string name="more_header_update">App Update</string>
     <string name="share_app_title">Share App</string>
     <string name="share_app_desc">Share this app with friends</string>
     <string name="share_app_subject">Check out Memes Ji App!</string>
@@ -51,9 +51,6 @@
     <string name="url_developer_profile">https://github.com/ele-jar</string>
     <string name="error_network">Network error. Please check your connection.</string>
 
-    <string name="cutie_mode">Cutie Mode</string>
-    <string name="cutie_mode_desc">Hide potentially sensitive memes (tagged "18+")</string>
-
     <string name="download">Download</string>
     <string name="share">Share</string>
     <string name="open_in_browser">Open in Browser</string>
@@ -63,13 +60,11 @@
     <string name="preparing_share">Preparing image for sharing...</string>
     <string name="share_meme_title">Share Meme</string>
     <string name="error_preparing_share">Could not prepare image for sharing.</string>
-    <string name="share_error">Error sharing app.</string> <!-- Changed context -->
+    <string name="share_error">Error sharing app.</string>
     <string name="share_via">Share via</string>
     <string name="action_search">Search</string>
-    <string name="action_settings">Settings</string>
+    <string name="action_settings_toolbar">Settings</string>
     <string name="cancel">Cancel</string>
-
-    <!-- Removed Download Bundle strings -->
 
     <string name="category_image_description">Image representing the category</string>
     <string name="meme_image_description">Meme image</string>
@@ -79,11 +74,23 @@
 
     <string name="download_failed_single">Failed to start download for %1$s.</string>
 
-    <!-- New strings for App Update section -->
-    <string name="changelog">Changelog</string>
+    <string name="changelog_title">Changelog:</string>
     <string name="version_info_format">Version: %1$s</string>
     <string name="release_date_format">Released: %1$s</string>
-    <string name="download_new_version">Download New Version</string>
+    <string name="download_update">Download Update</string>
     <string name="error_loading_app_info">Could not load update information.</string>
+
+    <string name="check_for_update_title">Check for Updates</string>
+    <string name="check_for_update_desc">Tap to see if a new version is available</string>
+    <string name="check_for_update_desc_error">Could not check for updates</string>
+    <string name="checking_for_updates">Checking for updates…</string>
+    <string name="update_available">Update available!</string>
+    <string name="no_update_available">You have the latest version.</string>
+    <string name="no_update_available_status">No new updates available</string>
+    <string name="error_checking_update">Error checking for updates.</string>
+
+    <string name="settings_header_general">General</string>
+    <string name="settings_cutie_mode_title">Cutie Mode (Hide 18+)</string>
+    <string name="settings_cutie_mode_summary">Filter out memes tagged as potentially sensitive</string>
 
 </resources>
