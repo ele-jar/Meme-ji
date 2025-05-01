@@ -1,58 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/settings_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
+    android:clipToPadding="false"
+    android:paddingBottom="16dp"
     tools:context=".ui.fragments.SettingsFragment">
 
-
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:minHeight="?attr/listPreferredItemHeight"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
-        android:gravity="center_vertical"> 
+        android:orientation="vertical"
+        android:paddingHorizontal="16dp">
 
-        <TextView
-            android:id="@+id/textViewCutieModeLabel"
-            android:layout_width="wrap_content"
+        <!-- Use list_header if needed, e.g., for sections -->
+        <include
+            layout="@layout/list_header"
+            android:id="@+id/headerGeneral"
+             />
+        <!-- Ensure headerGeneral's text is set in SettingsFragment.kt if used -->
+
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_centerVertical="true"
-            android:layout_marginEnd="16dp"
-            android:layout_toStartOf="@id/switch_cutie_mode_settings"
-            android:text="@string/cutie_mode"
-            android:textAppearance="?attr/textAppearanceBodyLarge" />
+            app:cardElevation="2dp"
+            app:cardUseCompatPadding="true">
 
-        <com.google.android.material.materialswitch.MaterialSwitch
-            android:id="@+id/switch_cutie_mode_settings"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            app:thumbIconTint="?attr/colorOnPrimary"
-            app:thumbTint="@color/switch_thumb_tint"
-            app:trackTint="@color/switch_track_tint" />
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="16dp"
+                android:paddingVertical="12dp">
 
-    </RelativeLayout>
+                <TextView
+                    android:id="@+id/textViewCutieModeTitle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    android:textAppearance="?attr/textAppearanceBodyLarge"
+                    android:textColor="?attr/colorOnSurface"
+                    android:text="@string/settings_cutie_mode_title"
+                    app:layout_constraintEnd_toStartOf="@+id/switchCutieModeSettings"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-    
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
-        android:paddingBottom="16dp"
-        android:textAppearance="?attr/textAppearanceBodySmall"
-        android:textColor="?android:attr/textColorSecondary"
-        android:text="@string/cutie_mode_desc" />
 
-    <com.google.android.material.divider.MaterialDivider
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+                <com.google.android.material.materialswitch.MaterialSwitch
+                    android:id="@+id/switchCutieModeSettings"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-</LinearLayout>
+                <TextView
+                    android:id="@+id/textViewCutieModeDesc"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginEnd="16dp"
+                    android:textAppearance="?attr/textAppearanceBodyMedium"
+                    android:textColor="?attr/colorOnSurfaceVariant"
+                    android:text="@string/settings_cutie_mode_summary"
+                    app:layout_constraintEnd_toStartOf="@+id/switchCutieModeSettings"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textViewCutieModeTitle" />
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+    </LinearLayout>
+</ScrollView>
