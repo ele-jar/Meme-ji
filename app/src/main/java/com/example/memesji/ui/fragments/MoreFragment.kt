@@ -19,6 +19,7 @@ import com.example.memesji.BuildConfig
 import com.example.memesji.R
 import com.example.memesji.databinding.FragmentMoreBinding
 import com.example.memesji.ui.MainActivity
+import com.example.memesji.util.EventObserver
 import com.example.memesji.viewmodel.MemeViewModel
 import com.google.android.material.transition.MaterialFadeThrough
 
@@ -56,16 +57,14 @@ class MoreFragment : Fragment() {
         setupInfoSection()
         setupContributeSection()
         setupMoreSection()
+        setupUpdateSection() // Setup the initial state of the update section
         setupClickListeners()
         observeViewModel()
-        // Removed fetch call from here
     }
 
     override fun onResume() {
         super.onResume()
-        // Fetch app update info every time the fragment becomes active
-        Log.d("MoreFragment", "onResume called, fetching app update info.")
-        viewModel.fetchAppUpdateInfo()
+        // Removed automatic update check from onResume
     }
 
 
@@ -101,7 +100,6 @@ class MoreFragment : Fragment() {
              secondaryText.text = getString(R.string.source_code_url)
              secondaryText.isVisible = true
              icon.setImageResource(R.drawable.ic_code)
-             root.setOnClickListener { openUrl("https://" + getString(R.string.source_code_url)) }
          }
     }
 
@@ -143,9 +141,20 @@ class MoreFragment : Fragment() {
          }
      }
 
+     private fun setupUpdateSection() {
+         binding.itemCheckForUpdate.apply {
+             primaryText.text = getString(R.string.check_for_update_title)
+             secondaryText.text = getString(R.string.check_for_update_desc)
+             secondaryText.isVisible = true
+             icon.setImageResource(R.drawable.ic_update)
+         }
+         binding.progressBarAppInfo.isVisible = false
+         binding.textViewAppInfoError.isVisible = false
+         binding.updateDetailsSection.isVisible = false
+     }
+
 
     private fun setupClickListeners() {
-
         binding.itemShareApp.root.setOnClickListener { shareApp() }
         binding.itemReportBug.root.setOnClickListener { openUrl(getString(R.string.url_report_bug)) }
         binding.itemTranslate.root.setOnClickListener { openUrl(getString(R.string.url_translate)) }
@@ -153,9 +162,12 @@ class MoreFragment : Fragment() {
             findNavController().navigate(MoreFragmentDirections.actionMoreFragmentToSettingsFragment())
         }
         binding.itemSocials.root.setOnClickListener { openUrl(getString(R.string.url_developer_profile)) }
-
         binding.itemSourceCode.root.setOnClickListener { openUrl("https://" + getString(R.string.source_code_url)) }
-
+        binding.itemCheckForUpdate.root.setOnClickListener {
+            Log.d("MoreFragment", "Check for update clicked.")
+            binding.itemCheckForUpdate.secondaryText.text = getString(R.string.checking_for_updates)
+            viewModel.fetchAppUpdateInfo()
+        }
         // Download button click listener is set dynamically in observeViewModel
     }
 
@@ -174,62 +186,72 @@ class MoreFragment : Fragment() {
     }
 
     private fun observeViewModel() {
-         // Observe total meme count
          viewModel.totalMemeCount.observe(viewLifecycleOwner) { count ->
              binding.itemTotalMemes.secondaryText.text = count?.toString() ?: getString(R.string.total_memes_loading)
              binding.itemTotalMemes.secondaryText.isVisible = true
          }
 
-         // Observe App Info Loading State
          viewModel.isAppInfoLoading.observe(viewLifecycleOwner) { isLoading ->
              binding.progressBarAppInfo.isVisible = isLoading
+             binding.itemCheckForUpdate.root.isEnabled = !isLoading // Disable click while loading
              if (isLoading) {
                  binding.textViewAppInfoError.isVisible = false
-                 binding.updateSection.isVisible = false
+                 binding.updateDetailsSection.isVisible = false // Hide details while checking
+                 binding.itemCheckForUpdate.secondaryText.text = getString(R.string.checking_for_updates)
+             } else {
+                 // Re-enable click after loading finishes (success or error)
+                 binding.itemCheckForUpdate.root.isEnabled = true
              }
          }
 
-         // Observe App Info Error State
          viewModel.appInfoError.observe(viewLifecycleOwner) { error ->
              val isLoading = viewModel.isAppInfoLoading.value ?: false
              binding.textViewAppInfoError.isVisible = error != null && !isLoading
              if(binding.textViewAppInfoError.isVisible) {
                  binding.textViewAppInfoError.text = error ?: getString(R.string.error_loading_app_info)
-                 binding.updateSection.isVisible = false
+                 binding.updateDetailsSection.isVisible = false // Hide details on error
+                 binding.itemCheckForUpdate.secondaryText.text = getString(R.string.check_for_update_desc_error)
+             } else if (!isLoading) {
+                 // Hide error text if there's no error and not loading
+                 binding.textViewAppInfoError.isVisible = false
              }
          }
 
-         // Observe App Info Data
          viewModel.appInfo.observe(viewLifecycleOwner) { appInfo ->
             val error = viewModel.appInfoError.value
             val isLoading = viewModel.isAppInfoLoading.value ?: false
-            val shouldShowUpdate = appInfo != null && appInfo.showDownload && error == null && !isLoading
 
-            binding.updateSection.isVisible = shouldShowUpdate
-            binding.headerUpdate.root.isVisible = shouldShowUpdate
-
-            if (shouldShowUpdate) {
-                binding.textViewUpdateVersion.text = getString(R.string.version_info_format, appInfo?.version ?: "N/A")
-                binding.textViewUpdateDate.text = getString(R.string.release_date_format, appInfo?.buildDate ?: "N/A")
-                binding.textViewChangelog.text = appInfo?.changelog ?: "No changelog available."
-                binding.buttonDownloadUpdate.setOnClickListener {
-                    appInfo?.downloadUrl?.let { url -> openUrl(url) }
-                        ?: Toast.makeText(context, R.string.could_not_open_link, Toast.LENGTH_SHORT).show()
+            if (!isLoading && error == null) {
+                if (appInfo != null && appInfo.showDownload) {
+                    binding.updateDetailsSection.isVisible = true
+                    binding.itemCheckForUpdate.secondaryText.text = getString(R.string.update_available)
+                    binding.textViewUpdateVersion.text = getString(R.string.version_info_format, appInfo.version ?: "N/A")
+                    binding.textViewUpdateDate.text = getString(R.string.release_date_format, appInfo.buildDate ?: "N/A")
+                    binding.textViewChangelog.text = appInfo.changelog ?: "No changelog available."
+                    binding.buttonDownloadUpdate.setOnClickListener {
+                        appInfo.downloadUrl?.let { url -> openUrl(url) }
+                            ?: Toast.makeText(context, R.string.could_not_open_link, Toast.LENGTH_SHORT).show()
+                    }
+                } else {
+                    // No update available or appInfo is null after successful fetch
+                    binding.updateDetailsSection.isVisible = false
+                    if (appInfo != null) { // Only update text if fetch was successful but no update needed
+                         binding.itemCheckForUpdate.secondaryText.text = getString(R.string.no_update_available_status)
+                    } else if (error == null) { // Reset to default if appInfo is null and no error/loading
+                         binding.itemCheckForUpdate.secondaryText.text = getString(R.string.check_for_update_desc)
+                    }
                 }
+            } else if (isLoading || error != null) {
+                 // Ensure details are hidden if loading or error occurred
+                 binding.updateDetailsSection.isVisible = false
             }
          }
-     }
 
-    private fun openPlayStoreForRating() {
-        val packageName = context?.packageName ?: return
-        try {
-            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=$packageName")))
-        } catch (e: android.content.ActivityNotFoundException) {
-            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=$packageName")))
-        } catch (e: Exception) {
-            Toast.makeText(context, R.string.could_not_open_link, Toast.LENGTH_SHORT).show()
-        }
-    }
+         // Observe the result message event to show toasts
+         viewModel.updateCheckResultMessage.observe(viewLifecycleOwner, EventObserver { message ->
+            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+         })
+     }
 
     private fun openUrl(url: String) {
          if (url.isBlank() || !url.startsWith("http")) {
