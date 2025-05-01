@@ -89,7 +89,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun setupSwipeToRefresh() {
-        binding.swipeRefreshLayout.setColorSchemeResources(R.color.md_theme_primary, R.color.md_theme_secondary)
+        binding.swipeRefreshLayout.setColorSchem eResources(R.color.md_theme_primary)
         binding.swipeRefreshLayout.setOnRefreshListener {
             Log.d("HomeFragment", "Swipe to refresh triggered.")
             viewModel.loadMemes(forceRefresh = true)
