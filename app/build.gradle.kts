@@ -1,4 +1,6 @@
 import java.io.File
+import com.android.build.api.variant.ApplicationAndroidComponentsExtension
+import com.android.build.api.artifact.SingleArtifact
 
 plugins {
     alias(libs.plugins.android.application)
@@ -7,6 +9,7 @@ plugins {
     id("org.jetbrains.kotlin.kapt")
     alias(libs.plugins.androidx.navigation.safeargs.kotlin)
 }
+
 
 android {
     namespace = "com.example.memesji"
@@ -23,6 +26,7 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+        setProperty("archivesBaseName", "Meme-ji-v$versionName")
     }
 
     signingConfigs {
@@ -38,10 +42,11 @@ android {
                 this.keyAlias = keyAlias
                 this.keyPassword = keyPassword
             } else {
-                 println("!!! Release signing config not fully set up via environment/properties.")
+                 println("!!! Release signing config not fully set up. Using debug signing for local release build.")
             }
         }
     }
+
 
     buildTypes {
         release {
@@ -50,23 +55,14 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            if (signingConfigs.getByName("release").storeFile != null) {
-                 signingConfig = signingConfigs.getByName("release")
-            } else {
-                 println("!!! Release signing config incomplete, release build might fail or use debug signing.")
-                 signingConfig = signingConfigs.getByName("debug") // Fallback to debug if release isn't configured
-            }
+             if (signingConfigs.getByName("release").storeFile != null) {
+                  signingConfig = signingConfigs.getByName("release")
+             } else {
+                  println("!!! Release signing config incomplete, release build might fail or use debug signing.")
+             }
         }
         debug {
-            isMinifyEnabled = false
-        }
-    }
-
-    applicationVariants.all {
-        if (buildType.name == "release") {
-            outputs.all {
-                outputFileName = "Meme-ji-v1.0.apk"
-            }
+             isMinifyEnabled = false
         }
     }
 
@@ -84,6 +80,7 @@ android {
     }
 
 }
+
 
 dependencies {
     implementation(libs.androidx.core.ktx)
