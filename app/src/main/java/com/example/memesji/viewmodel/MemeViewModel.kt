@@ -20,13 +20,13 @@ import com.example.memesji.util.PreferencesHelper
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay 
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.IOException
 import java.util.regex.Pattern
-import android.content.ContentValues 
+import android.content.ContentValues
 
 
 class MemeViewModel(application: Application) : AndroidViewModel(application) {
@@ -274,14 +274,20 @@ class MemeViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun fetchAppUpdateInfo() {
-        if (_isAppInfoLoading.value == true || _appInfo.value != null) return
+        // Only prevent fetch if *currently* loading, allow refetch otherwise
+        if (_isAppInfoLoading.value == true) {
+            Log.d("MemeViewModel", "App info fetch already in progress.")
+            return
+        }
 
         viewModelScope.launch {
             _isAppInfoLoading.value = true
             _appInfoError.value = null
+            Log.d("MemeViewModel", "Attempting to fetch app update info...") // Add log
             val result = repository.getAppUpdateInfo()
             result.onSuccess { info ->
                 _appInfo.value = info
+                Log.d("MemeViewModel", "Successfully fetched app update info.") // Add log
             }.onFailure { throwable ->
                 Log.e("MemeViewModel", "Failed to fetch app update info", throwable)
                 _appInfoError.value = throwable.localizedMessage ?: "Failed to load update info"
@@ -290,6 +296,7 @@ class MemeViewModel(application: Application) : AndroidViewModel(application) {
             _isAppInfoLoading.value = false
         }
     }
+
 
      suspend fun prepareMemeForSharing(meme: Meme) {
          if (_isCutieModeEnabled.value == true && meme.tags.any { it.equals(MemeRepository.SENSITIVE_TAG, ignoreCase = true) }) {
@@ -391,9 +398,9 @@ class MemeViewModel(application: Application) : AndroidViewModel(application) {
 
 
     private fun clearStatusAfterDelay(liveData: MutableLiveData<String?>, delayMillis: Long, isError: Boolean) {
-        val delayVal = if (isError) delayMillis * 2 else delayMillis // Renamed local variable
+        val delayVal = if (isError) delayMillis * 2 else delayMillis
         viewModelScope.launch {
-            delay(delayVal) // Use the function from kotlinx.coroutines
+            delay(delayVal)
             if (liveData.value == liveData.value) {
                liveData.postValue(null)
             }
