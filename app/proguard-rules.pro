@@ -4,7 +4,7 @@
 
 -keep public class * extends androidx.fragment.app.Fragment
 -keep public class * extends androidx.fragment.app.DialogFragment
--keep public class **/*Args { *; }
+-keep class **.*Args
 
 -keep class androidx.lifecycle.ViewModel { *; }
 -keepclassmembers class * extends androidx.lifecycle.ViewModel {
