@@ -67,6 +67,9 @@ class MemeViewModel(application: Application) : AndroidViewModel(application) {
     private val _appInfoError = MutableLiveData<String?>()
     val appInfoError: LiveData<String?> get() = _appInfoError
 
+    private val _updateCheckResultMessage = MutableLiveData<Event<String>>()
+    val updateCheckResultMessage: LiveData<Event<String>> get() = _updateCheckResultMessage
+
 
     private val _singleMemeDownloadStatus = MutableLiveData<String?>()
     val singleMemeDownloadStatus: LiveData<String?> get() = _singleMemeDownloadStatus
@@ -103,6 +106,7 @@ class MemeViewModel(application: Application) : AndroidViewModel(application) {
             _totalMemeCount.value = memes?.size ?: 0
         }
         loadMemes(forceRefresh = false)
+        // Removed automatic fetchAppUpdateInfo() call from init
     }
 
     private fun setupMediators() {
@@ -274,7 +278,6 @@ class MemeViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun fetchAppUpdateInfo() {
-        // Only prevent fetch if *currently* loading, allow refetch otherwise
         if (_isAppInfoLoading.value == true) {
             Log.d("MemeViewModel", "App info fetch already in progress.")
             return
@@ -283,15 +286,22 @@ class MemeViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch {
             _isAppInfoLoading.value = true
             _appInfoError.value = null
-            Log.d("MemeViewModel", "Attempting to fetch app update info...") // Add log
+            _appInfo.value = null // Clear previous info before fetching
+            Log.d("MemeViewModel", "Attempting to fetch app update info...")
             val result = repository.getAppUpdateInfo()
             result.onSuccess { info ->
                 _appInfo.value = info
-                Log.d("MemeViewModel", "Successfully fetched app update info.") // Add log
+                if (info.showDownload) {
+                    _updateCheckResultMessage.value = Event(getString(R.string.update_available))
+                } else {
+                    _updateCheckResultMessage.value = Event(getString(R.string.no_update_available))
+                }
+                Log.d("MemeViewModel", "Successfully fetched app update info.")
             }.onFailure { throwable ->
                 Log.e("MemeViewModel", "Failed to fetch app update info", throwable)
                 _appInfoError.value = throwable.localizedMessage ?: "Failed to load update info"
                 _appInfo.value = null
+                _updateCheckResultMessage.value = Event(getString(R.string.error_checking_update))
             }
             _isAppInfoLoading.value = false
         }
