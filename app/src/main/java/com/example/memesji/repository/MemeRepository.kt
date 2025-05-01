@@ -14,6 +14,7 @@ import androidx.core.content.FileProvider
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.example.memesji.R
+import com.example.memesji.data.AppInfo
 import com.example.memesji.data.CategoryItem
 import com.example.memesji.data.Meme
 import com.example.memesji.data.remote.ApiService
@@ -77,6 +78,24 @@ class MemeRepository(
             }
         } catch (e: Exception) {
             Log.e("MemeRepository", "Network error fetching memes", e)
+            Result.failure(e)
+        }
+    }
+
+    // Function to fetch app update info
+    suspend fun getAppUpdateInfo(): Result<AppInfo> {
+        return try {
+            Log.d("MemeRepository", "Fetching app update info.")
+            val response = apiService.getAppUpdateInfo()
+            if (response.isSuccessful && response.body() != null) {
+                Log.d("MemeRepository", "App update info fetched successfully: ${response.body()}")
+                Result.success(response.body()!!)
+            } else {
+                Log.e("MemeRepository", "Error fetching app update info: ${response.code()} ${response.message()}")
+                Result.failure(Exception("Error fetching app update info: ${response.code()} ${response.message()}"))
+            }
+        } catch (e: Exception) {
+            Log.e("MemeRepository", "Network error fetching app update info", e)
             Result.failure(e)
         }
     }
@@ -235,7 +254,6 @@ class MemeRepository(
          }
      }
 
-     // Removed downloadMemesAsZip function
 
     @RequiresApi(Build.VERSION_CODES.Q)
       private fun createOutputStreamQ(fileName: String, context: Context): OutputStream? {
@@ -301,7 +319,7 @@ class MemeRepository(
         }
     }
 
-
+     // downloadAndUnzipBundle remains unchanged
      suspend fun downloadAndUnzipBundle(bundleUrl: String, destinationDir: File): Result<Unit> = withContext(Dispatchers.IO) {
           try {
              Log.d("MemeRepository", "Starting download from $bundleUrl to $destinationDir")
