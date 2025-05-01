@@ -10,7 +10,7 @@ import androidx.annotation.RequiresApi
 import androidx.core.content.FileProvider
 import androidx.lifecycle.*
 import com.example.memesji.R
-import com.example.memesji.data.AppInfo 
+import com.example.memesji.data.AppInfo
 import com.example.memesji.data.CategoryItem
 import com.example.memesji.data.Meme
 import com.example.memesji.data.remote.RetrofitInstance
@@ -19,10 +19,15 @@ import com.example.memesji.util.Event
 import com.example.memesji.util.PreferencesHelper
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay 
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.IOException
+import java.util.regex.Pattern
+import android.content.ContentValues 
+
 
 class MemeViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -53,7 +58,6 @@ class MemeViewModel(application: Application) : AndroidViewModel(application) {
     private val _error = MutableLiveData<String?>()
     val error: LiveData<String?> get() = _error
 
-    // LiveData for App Update Info
     private val _appInfo = MutableLiveData<AppInfo?>()
     val appInfo: LiveData<AppInfo?> get() = _appInfo
 
@@ -62,6 +66,7 @@ class MemeViewModel(application: Application) : AndroidViewModel(application) {
 
     private val _appInfoError = MutableLiveData<String?>()
     val appInfoError: LiveData<String?> get() = _appInfoError
+
 
     private val _singleMemeDownloadStatus = MutableLiveData<String?>()
     val singleMemeDownloadStatus: LiveData<String?> get() = _singleMemeDownloadStatus
@@ -384,10 +389,11 @@ class MemeViewModel(application: Application) : AndroidViewModel(application) {
          _singleMemeDownloadStatus.value = null
      }
 
+
     private fun clearStatusAfterDelay(liveData: MutableLiveData<String?>, delayMillis: Long, isError: Boolean) {
-        val delay = if (isError) delayMillis * 2 else delayMillis
+        val delayVal = if (isError) delayMillis * 2 else delayMillis // Renamed local variable
         viewModelScope.launch {
-            delay(delay)
+            delay(delayVal) // Use the function from kotlinx.coroutines
             if (liveData.value == liveData.value) {
                liveData.postValue(null)
             }
