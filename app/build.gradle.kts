@@ -1,3 +1,5 @@
+import java.io.File
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
@@ -23,19 +25,47 @@ android {
         }
     }
 
+    // --- Signing Config Block ---
+    // Reads signing information from environment variables (set by GitHub Actions secrets)
+    signingConfigs {
+        create("release") {
+            val storeFile = System.getenv("SIGNING_STORE_FILE") ?: "keystore_placeholder.jks"
+            val storePassword = System.getenv("SIGNING_STORE_PASSWORD") ?: ""
+            val keyAlias = System.getenv("SIGNING_KEY_ALIAS") ?: ""
+            val keyPassword = System.getenv("SIGNING_KEY_PASSWORD") ?: ""
+
+            // Only apply signing if the file exists and secrets are provided (i.e., in CI)
+            if (storeFile != "keystore_placeholder.jks" && File(storeFile).exists()) {
+                storeFile(File(storeFile))
+                storePassword(storePassword)
+                keyAlias(keyAlias)
+                keyPassword(keyPassword)
+            } else {
+                 println("!!! Release signing config not found or file missing. CI should provide secrets.")
+            }
+        }
+    }
+    // --- End of Signing Config Block ---
+
+
     buildTypes {
         release {
-            isMinifyEnabled = false
+            // --- Enable Minification for Release ---
+            isMinifyEnabled = true // Set to true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            // --- Apply the Signing Config ---
+            signingConfig = signingConfigs.getByName("release")
         }
         debug {
-
+            // Debug builds typically don't need signing config and have minify disabled
+             isMinifyEnabled = false
         }
     }
     compileOptions {
+        // Keep Java 8 compatibility for wider device support / library compatibility
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
@@ -44,7 +74,7 @@ android {
     }
     buildFeatures {
         viewBinding = true
-        dataBinding = false
+        dataBinding = false // Keeping this false as per original
         buildConfig = true
     }
 
