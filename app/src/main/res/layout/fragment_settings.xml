@@ -20,8 +20,8 @@
         android:textAppearance="?attr/textAppearanceBodyLarge"
         android:text="@string/cutie_mode"
         app:thumbIconTint="?attr/colorOnPrimary"
-        app:trackTint="?attr/colorPrimary"
-        app:thumbTint="?attr/colorPrimary" />
+        app:trackTint="@color/switch_track_tint" <!-- Use CSL for track -->
+        app:thumbTint="@color/switch_thumb_tint" /> <!-- Use CSL for thumb -->
 
     <TextView
         android:layout_width="match_parent"
