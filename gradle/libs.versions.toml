@@ -17,7 +17,7 @@ espressoCore = "3.6.1"
 # Updated appcompat
 appcompat = "1.7.0"
 # Updated material
-material = "1.13.0"
+material = "1.12.0"
 constraintlayout = "2.1.4" # Still latest stable
 # Updated lifecycle
 lifecycleLivedataKtx = "2.8.2"
