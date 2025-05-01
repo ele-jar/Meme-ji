@@ -1,18 +1,16 @@
 package com.example.memesji.viewmodel
 
 import android.app.Application
-import android.app.DownloadManager
-import android.content.Context
 import android.net.Uri
 import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
-import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.content.FileProvider
 import androidx.lifecycle.*
 import com.example.memesji.R
+import com.example.memesji.data.AppInfo 
 import com.example.memesji.data.CategoryItem
 import com.example.memesji.data.Meme
 import com.example.memesji.data.remote.RetrofitInstance
@@ -21,13 +19,10 @@ import com.example.memesji.util.Event
 import com.example.memesji.util.PreferencesHelper
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.IOException
-import java.util.regex.Pattern
 
 class MemeViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -40,7 +35,6 @@ class MemeViewModel(application: Application) : AndroidViewModel(application) {
     )
 
     private val _rawMemes = MutableLiveData<List<Meme>>()
-    // Change totalMemeCount implementation
     private val _totalMemeCount = MediatorLiveData<Int>().apply { value = 0 }
     val totalMemeCount: LiveData<Int> get() = _totalMemeCount
 
@@ -59,8 +53,15 @@ class MemeViewModel(application: Application) : AndroidViewModel(application) {
     private val _error = MutableLiveData<String?>()
     val error: LiveData<String?> get() = _error
 
-    private val _bundleDownloadStatus = MutableLiveData<String?>()
-    val bundleDownloadStatus: LiveData<String?> get() = _bundleDownloadStatus
+    // LiveData for App Update Info
+    private val _appInfo = MutableLiveData<AppInfo?>()
+    val appInfo: LiveData<AppInfo?> get() = _appInfo
+
+    private val _isAppInfoLoading = MutableLiveData<Boolean>()
+    val isAppInfoLoading: LiveData<Boolean> get() = _isAppInfoLoading
+
+    private val _appInfoError = MutableLiveData<String?>()
+    val appInfoError: LiveData<String?> get() = _appInfoError
 
     private val _singleMemeDownloadStatus = MutableLiveData<String?>()
     val singleMemeDownloadStatus: LiveData<String?> get() = _singleMemeDownloadStatus
@@ -93,7 +94,6 @@ class MemeViewModel(application: Application) : AndroidViewModel(application) {
     init {
         _isCutieModeEnabled.value = PreferencesHelper.isCutieModeEnabled(_applicationContext)
         setupMediators()
-        // Update total count when raw memes change
         _totalMemeCount.addSource(_rawMemes) { memes ->
             _totalMemeCount.value = memes?.size ?: 0
         }
@@ -200,7 +200,7 @@ class MemeViewModel(application: Application) : AndroidViewModel(application) {
 
             val result = repository.getMemes(forceRefresh = forceRefresh)
             result.onSuccess { memeList ->
-                _rawMemes.value = memeList // This will trigger the _totalMemeCount update
+                _rawMemes.value = memeList
                 _rawCategories.value = repository.getCategoriesWithImages()
                 Log.d("MemeViewModel", "Loaded ${memeList.size} raw memes, ${_rawCategories.value?.size ?: 0} categories.")
             }.onFailure { throwable ->
@@ -235,9 +235,10 @@ class MemeViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun switchToHomeView() {
-        if (_memesForCategory.value != null) {
-            Log.d("MemeViewModel", "Switching to Home View, clearing category filter.")
+        if (_memesForCategory.value != null || _error.value != null) {
+            Log.d("MemeViewModel", "Switching to Home View, clearing category filter and error.")
             _memesForCategory.value = null
+            _error.value = null
         }
     }
 
@@ -267,26 +268,21 @@ class MemeViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
+    fun fetchAppUpdateInfo() {
+        if (_isAppInfoLoading.value == true || _appInfo.value != null) return
 
-    fun downloadBundle(bundleName: String, bundleUrl: String) {
         viewModelScope.launch {
-            postBundleDownloadStatus(getString(R.string.bundle_download_starting, bundleName))
-            _isLoading.value = true
-            val destinationDir = File(_applicationContext.filesDir, "meme_bundles/$bundleName")
-
-            val result = repository.downloadAndUnzipBundle(bundleUrl, destinationDir)
-
-            result.onSuccess {
-                postBundleDownloadStatus(getString(R.string.bundle_download_success, bundleName))
+            _isAppInfoLoading.value = true
+            _appInfoError.value = null
+            val result = repository.getAppUpdateInfo()
+            result.onSuccess { info ->
+                _appInfo.value = info
             }.onFailure { throwable ->
-                 if (throwable is CancellationException) {
-                      postBundleDownloadStatus(getString(R.string.bundle_download_cancelled, bundleName))
-                  } else {
-                      postBundleDownloadStatus(getString(R.string.bundle_download_failed, bundleName, throwable.localizedMessage ?: "Unknown error"), isError = true)
-                      Log.e("MemeViewModel", "Download failed for $bundleName", throwable)
-                  }
+                Log.e("MemeViewModel", "Failed to fetch app update info", throwable)
+                _appInfoError.value = throwable.localizedMessage ?: "Failed to load update info"
+                _appInfo.value = null
             }
-            _isLoading.value = false
+            _isAppInfoLoading.value = false
         }
     }
 
@@ -335,7 +331,6 @@ class MemeViewModel(application: Application) : AndroidViewModel(application) {
               clearStatusAfterDelay(_singleMemeDownloadStatus, 3000L, false)
          }
      }
-
 
     @RequiresApi(Build.VERSION_CODES.Q)
     private fun markMediaStoreDownloadComplete(pendingFile: File) {
@@ -387,16 +382,6 @@ class MemeViewModel(application: Application) : AndroidViewModel(application) {
 
      fun clearSingleMemeDownloadStatus() {
          _singleMemeDownloadStatus.value = null
-     }
-
-     fun clearBundleDownloadStatus() {
-        _bundleDownloadStatus.value = null
-    }
-
-
-     private fun postBundleDownloadStatus(message: String, duration: Long = 4000L, isError: Boolean = false) {
-         _bundleDownloadStatus.value = message
-         clearStatusAfterDelay(_bundleDownloadStatus, duration, isError)
      }
 
     private fun clearStatusAfterDelay(liveData: MutableLiveData<String?>, delayMillis: Long, isError: Boolean) {
