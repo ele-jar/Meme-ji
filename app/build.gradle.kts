@@ -1,5 +1,5 @@
 import java.io.File
-import com.android.build.api.variant.ApplicationAndroidComponentsExtension
+
 
 plugins {
     alias(libs.plugins.android.application)
@@ -8,6 +8,8 @@ plugins {
     id("org.jetbrains.kotlin.kapt")
     alias(libs.plugins.androidx.navigation.safeargs.kotlin)
 }
+
+
 
 android {
     namespace = "com.example.memesji"
@@ -18,7 +20,7 @@ android {
         minSdk = 24
         targetSdk = 34
         versionCode = 1
-        versionName = "1.0"
+        versionName = "1.0" // Keep this defined here
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -63,6 +65,19 @@ android {
         }
     }
 
+    // --- Use applicationVariants (older API but often works) ---
+    applicationVariants.all { // Use 'all' to configure all variants (debug, release, etc.)
+        outputs.all {
+            
+
+             
+                 outputFileName = "Meme-ji-v1.0.apk"
+            
+        }
+    }
+    
+
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
@@ -74,17 +89,6 @@ android {
         viewBinding = true
         dataBinding = false
         buildConfig = true
-    }
-
-    // Configure Variant API within androidComponents block
-    @Suppress("UnstableApiUsage") // Suppress warning for experimental APIs if necessary
-    androidComponents {
-        onVariants(selector().withBuildType("release")) { variant ->
-            variant.outputs.all { output ->
-                 // output is type com.android.build.api.variant.VariantOutput
-                output.outputFileName.set("Meme-ji-v1.0.apk")
-            }
-        }
     }
 
 } // End of android block
