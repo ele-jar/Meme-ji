@@ -1,30 +1,50 @@
 [versions]
-agp = "8.2.2" # Keep this aligned with your Android Studio / Build Tools version
-kotlin = "1.9.23" # Use a recent stable Kotlin version
-coreKtx = "1.13.1" # Latest stable core-ktx
+# Updated AGP to latest stable
+agp = "8.5.0"
+# Updated Kotlin to latest stable major
+kotlin = "2.0.0"
+# Updated Gradle version below matches AGP 8.5 compatibility
+gradle = "8.9"
+
+# Core & Testing
+coreKtx = "1.13.1"
 junit = "4.13.2"
-junitVersion = "1.1.5"
-espressoCore = "3.5.1"
-appcompat = "1.6.1" # Stable appcompat
-material = "1.12.0" # Material Components (for M3)
-constraintlayout = "2.1.4" # Stable constraintlayout
-lifecycleLivedataKtx = "2.7.0" # Latest stable lifecycle
-lifecycleViewmodelKtx = "2.7.0" # Latest stable lifecycle
-navigationFragmentKtx = "2.7.7" # Latest stable navigation
-navigationUiKtx = "2.7.7" # Latest stable navigation
-navigationSafeargs = "2.7.7" # Navigation safe args plugin
-retrofit = "2.9.0" # Retrofit stable
-# converterGson = "2.9.0" # Gson converter for Retrofit (use 2.9.0 for compatibility with Retrofit 2.9.0)
-converterGson = "2.11.0" # Or try latest Gson with Retrofit 2.9.0, usually fine
-okhttp = "4.12.0" # Latest stable OkHttp (check compatibility if issues arise)
-glide = "4.16.0" # Latest stable Glide
-coroutines = "1.8.0" # Latest stable coroutines
-# Hilt versions (if you were to add it)
-# hilt = "2.51.1"
-# googleServices = "4.4.1" # For Firebase/Google services
-activityKtx = "1.9.0" # Latest stable activity-ktx
-fragmentKtx = "1.7.0" # Latest stable fragment-ktx
-swipeRefreshLayout = "1.1.0" # Stable SwipeRefreshLayout
+# Updated androidx test versions
+junitVersion = "1.2.1"
+espressoCore = "3.6.1"
+
+# AndroidX UI & Components
+# Updated appcompat
+appcompat = "1.7.0"
+# Updated material
+material = "1.13.0"
+constraintlayout = "2.1.4" # Still latest stable
+# Updated lifecycle
+lifecycleLivedataKtx = "2.8.2"
+lifecycleViewmodelKtx = "2.8.2"
+# Navigation remains latest stable
+navigationFragmentKtx = "2.7.7"
+navigationUiKtx = "2.7.7"
+navigationSafeargs = "2.7.7" # Align with navigation components
+activityKtx = "1.9.0" # Still latest stable
+# Updated fragment
+fragmentKtx = "1.8.0"
+swipeRefreshLayout = "1.1.0" # Still latest stable
+
+# Networking
+# Updated Retrofit
+retrofit = "2.11.0"
+converterGson = "2.11.0" # Align with Retrofit
+# Using latest stable OkHttp v4 track (v5 is not fully stable yet)
+okhttp = "4.12.0"
+
+# Image Loading
+# Using latest stable Glide v4 track (v5 is not fully stable yet)
+glide = "4.16.0"
+
+# Coroutines
+# Updated coroutines
+coroutines = "1.8.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -57,20 +77,13 @@ glide-compiler = { group = "com.github.bumptech.glide", name = "compiler", versi
 kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutines" }
 kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutines" }
 
-# Hilt (Optional - Uncomment if needed)
-# hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
-# hilt-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt" } # Kapt dependency
-
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
 androidx-navigation-safeargs-kotlin = { id = "androidx.navigation.safeargs.kotlin", version.ref = "navigationSafeargs" }
-# hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt"} # If using Hilt
-# google-gms-google-services = { id = "com.google.gms.google-services", version.ref = "googleServices" } # If using Firebase
 
 [bundles]
 navigation = ["androidx.navigation.fragment.ktx", "androidx.navigation.ui.ktx"]
 lifecycle = ["androidx.lifecycle.livedata.ktx", "androidx.lifecycle.viewmodel.ktx"]
 network = ["retrofit", "converter-gson", "okhttp", "logging-interceptor"]
-# testing = ["junit", "androidx.junit", "androidx.espresso.core"] # Example test bundle
