@@ -28,12 +28,7 @@ class MoreFragment : Fragment() {
     private val binding get() = _binding!!
     private val viewModel: MemeViewModel by activityViewModels()
 
-
-    private val memeBundles = mapOf(
-        "Classic Memes" to "https://github.com/ele-jar/meme-database/archive/refs/heads/main.zip",
-        "Sad Memes" to "https://example.com/memes_sad.zip",
-        "Relatable Memes" to "https://example.com/memes_relatable.zip"
-    )
+    // Removed memeBundles map
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,6 +60,7 @@ class MoreFragment : Fragment() {
         setupMoreSection()
         setupClickListeners()
         observeViewModel()
+        viewModel.fetchAppUpdateInfo() // Fetch info when view is created
     }
 
 
@@ -72,7 +68,7 @@ class MoreFragment : Fragment() {
         binding.headerInfo.headerText.text = getString(R.string.more_header_info)
         binding.headerContribute.headerText.text = getString(R.string.more_header_contribute)
         binding.headerMore.headerText.text = getString(R.string.more_header_more)
-        binding.headerDownloads.headerText.text = getString(R.string.more_header_downloads)
+        binding.headerUpdate.headerText.text = getString(R.string.more_header_update) // Updated header ID
     }
 
 
@@ -85,15 +81,15 @@ class MoreFragment : Fragment() {
         }
         binding.itemDeveloper.apply {
             primaryText.text = getString(R.string.developer)
-            secondaryText.text = getString(R.string.developer_name) // Updated string used here
+            secondaryText.text = getString(R.string.developer_name)
             secondaryText.isVisible = true
             icon.setImageResource(R.drawable.ic_person_outline)
         }
         binding.itemTotalMemes.apply {
             primaryText.text = getString(R.string.total_memes_title)
-            secondaryText.text = getString(R.string.total_memes_loading) // Placeholder
+            secondaryText.text = getString(R.string.total_memes_loading)
             secondaryText.isVisible = true
-            icon.setImageResource(R.drawable.ic_counter) // Replace with suitable icon if needed
+            icon.setImageResource(R.drawable.ic_counter)
         }
          binding.itemSourceCode.apply {
              primaryText.text = getString(R.string.source_code_title)
@@ -110,7 +106,7 @@ class MoreFragment : Fragment() {
              primaryText.text = getString(R.string.share_app_title)
              secondaryText.text = getString(R.string.share_app_desc)
              secondaryText.isVisible = true
-             icon.setImageResource(R.drawable.ic_share) // Use share icon
+             icon.setImageResource(R.drawable.ic_share)
          }
          binding.itemReportBug.apply {
              primaryText.text = getString(R.string.more_report_bug)
@@ -145,38 +141,22 @@ class MoreFragment : Fragment() {
 
     private fun setupClickListeners() {
 
-        binding.itemShareApp.root.setOnClickListener { shareApp() } // Share app listener
-        binding.itemReportBug.root.setOnClickListener { openUrl(getString(R.string.url_report_bug)) } // Updated URL used
+        binding.itemShareApp.root.setOnClickListener { shareApp() }
+        binding.itemReportBug.root.setOnClickListener { openUrl(getString(R.string.url_report_bug)) }
         binding.itemTranslate.root.setOnClickListener { openUrl(getString(R.string.url_translate)) }
         binding.itemSettings.root.setOnClickListener {
             findNavController().navigate(MoreFragmentDirections.actionMoreFragmentToSettingsFragment())
         }
-        binding.itemSocials.root.setOnClickListener { openUrl(getString(R.string.url_developer_profile)) } // Updated URL used
+        binding.itemSocials.root.setOnClickListener { openUrl(getString(R.string.url_developer_profile)) }
 
+        // Removed download bundle listeners
 
-        binding.buttonDownloadClassic.setOnClickListener {
-            downloadBundle("Classic Memes", memeBundles["Classic Memes"])
-        }
-        binding.buttonDownloadSad.setOnClickListener {
-            downloadBundle("Sad Memes", memeBundles["Sad Memes"])
-        }
-        binding.buttonDownloadRelatable.setOnClickListener {
-            downloadBundle("Relatable Memes", memeBundles["Relatable Memes"])
-        }
+         binding.itemSourceCode.root.setOnClickListener { openUrl("https://" + getString(R.string.source_code_url)) }
 
-         // Removed itemSource click listener
-         binding.itemSourceCode.root.setOnClickListener { openUrl("https://" + getString(R.string.source_code_url)) } // Updated URL used
+        // Click listener for the new download button is set in observeViewModel when data is available
     }
 
-    private fun downloadBundle(bundleName: String, bundleUrl: String?) {
-        if (bundleUrl == null || bundleUrl.contains("example.com")) {
-            Toast.makeText(context, getString(R.string.download_url_not_available, bundleName), Toast.LENGTH_SHORT).show()
-            return
-        }
-        (activity as? MainActivity)?.requestStoragePermission {
-            viewModel.downloadBundle(bundleName, bundleUrl)
-        }
-    }
+    // Removed downloadBundle function
 
     private fun shareApp() {
         try {
@@ -192,45 +172,55 @@ class MoreFragment : Fragment() {
     }
 
     private fun observeViewModel() {
-         viewModel.bundleDownloadStatus.observe(viewLifecycleOwner) { status ->
-             binding.textViewBundleDownloadStatus.isVisible = !status.isNullOrBlank()
-             binding.textViewBundleDownloadStatus.text = status ?: ""
-
-             val isDownloading = status?.contains("...") == true || status?.contains(getString(R.string.bundle_download_starting).substringBefore('%')) == true
-             binding.progressBarBundleDownload.isVisible = isDownloading
-             setDownloadButtonsEnabled(!isDownloading)
-         }
-
-         viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
-            val currentStatus = viewModel.bundleDownloadStatus.value
-            val isBundleDownloading = currentStatus?.contains("...") == true || currentStatus?.contains(getString(R.string.bundle_download_starting).substringBefore('%')) == true
-
-             if (isLoading && isBundleDownloading) {
-                 setDownloadButtonsEnabled(false)
-                 binding.progressBarBundleDownload.isVisible = true
-             } else if (!isBundleDownloading) {
-                 setDownloadButtonsEnabled(true)
-                 binding.progressBarBundleDownload.isVisible = false
-                  if(!isLoading && currentStatus != null && !currentStatus.contains(getString(R.string.bundle_download_success).substringBefore('%')) && !currentStatus.contains(getString(R.string.bundle_download_failed).substringBefore('%')) ) {
-                     viewModel.clearBundleDownloadStatus()
-                  }
-             }
-         }
-
          // Observe total meme count
          viewModel.totalMemeCount.observe(viewLifecycleOwner) { count ->
              binding.itemTotalMemes.secondaryText.text = count?.toString() ?: getString(R.string.total_memes_loading)
              binding.itemTotalMemes.secondaryText.isVisible = true
          }
+
+         // Observe App Info Loading State
+         viewModel.isAppInfoLoading.observe(viewLifecycleOwner) { isLoading ->
+             binding.progressBarAppInfo.isVisible = isLoading
+             if (isLoading) {
+                 binding.textViewAppInfoError.isVisible = false // Hide error while loading
+                 binding.updateSection.isVisible = false // Hide content while loading
+             }
+         }
+
+         // Observe App Info Error State
+         viewModel.appInfoError.observe(viewLifecycleOwner) { error ->
+             val isLoading = viewModel.isAppInfoLoading.value ?: false
+             binding.textViewAppInfoError.isVisible = error != null && !isLoading
+             if(binding.textViewAppInfoError.isVisible) {
+                 binding.textViewAppInfoError.text = error ?: getString(R.string.error_loading_app_info)
+                 binding.updateSection.isVisible = false // Hide content on error
+             }
+         }
+
+         // Observe App Info Data
+         viewModel.appInfo.observe(viewLifecycleOwner) { appInfo ->
+            val error = viewModel.appInfoError.value
+            val isLoading = viewModel.isAppInfoLoading.value ?: false
+            val shouldShowUpdate = appInfo != null && appInfo.showDownload && error == null && !isLoading
+
+            binding.updateSection.isVisible = shouldShowUpdate
+            binding.headerUpdate.root.isVisible = shouldShowUpdate // Show/hide header with section
+
+            if (shouldShowUpdate) {
+                binding.textViewUpdateVersion.text = getString(R.string.version_info_format, appInfo?.version ?: "N/A")
+                binding.textViewUpdateDate.text = getString(R.string.release_date_format, appInfo?.buildDate ?: "N/A")
+                binding.textViewChangelog.text = appInfo?.changelog ?: "No changelog available."
+                binding.buttonDownloadUpdate.setOnClickListener {
+                    appInfo?.downloadUrl?.let { url -> openUrl(url) }
+                        ?: Toast.makeText(context, R.string.could_not_open_link, Toast.LENGTH_SHORT).show()
+                }
+            }
+         }
      }
 
-    private fun setDownloadButtonsEnabled(enabled: Boolean) {
-        binding.buttonDownloadClassic.isEnabled = enabled
-        binding.buttonDownloadSad.isEnabled = enabled
-        binding.buttonDownloadRelatable.isEnabled = enabled
-    }
+    // Removed setDownloadButtonsEnabled function
 
-    private fun openPlayStoreForRating() { // Keep this function even if item removed, might be used elsewhere
+    private fun openPlayStoreForRating() {
         val packageName = context?.packageName ?: return
         try {
             startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=$packageName")))
@@ -242,7 +232,7 @@ class MoreFragment : Fragment() {
     }
 
     private fun openUrl(url: String) {
-         if (url.isBlank() || !url.startsWith("http")) { // Basic check for valid URL start
+         if (url.isBlank() || !url.startsWith("http")) {
              Toast.makeText(context, R.string.could_not_open_link, Toast.LENGTH_SHORT).show()
              Log.w("MoreFragment", "Attempted to open invalid URL: $url")
              return
