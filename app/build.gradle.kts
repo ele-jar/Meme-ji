@@ -1,6 +1,5 @@
 import java.io.File
 import com.android.build.api.variant.ApplicationAndroidComponentsExtension
-import com.android.build.api.artifact.SingleArtifact
 
 plugins {
     alias(libs.plugins.android.application)
@@ -8,10 +7,6 @@ plugins {
     id("kotlin-parcelize")
     id("org.jetbrains.kotlin.kapt")
     alias(libs.plugins.androidx.navigation.safeargs.kotlin)
-}
-
-fun getApplicationExtension(): ApplicationAndroidComponentsExtension {
-    return extensions.getByType(ApplicationAndroidComponentsExtension::class.java)
 }
 
 android {
@@ -81,13 +76,18 @@ android {
         buildConfig = true
     }
 
-}
-
-getApplicationExtension().onVariants(getApplicationExtension().selector().withBuildType("release")) { variant ->
-    variant.outputs.all { output ->
-        output.outputFileName.set("Meme-ji-v1.0.apk")
+    // Configure Variant API within androidComponents block
+    @Suppress("UnstableApiUsage") // Suppress warning for experimental APIs if necessary
+    androidComponents {
+        onVariants(selector().withBuildType("release")) { variant ->
+            variant.outputs.all { output ->
+                 // output is type com.android.build.api.variant.VariantOutput
+                output.outputFileName.set("Meme-ji-v1.0.apk")
+            }
+        }
     }
-}
+
+} // End of android block
 
 
 dependencies {
