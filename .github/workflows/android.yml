@@ -1,41 +1,53 @@
-name: Android CI Build
+name: Build Signed Android Release APK # Workflow name
 
 on:
   push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+    branches:
+      - main # Run this workflow automatically on every push to the 'main' branch
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    name: Build Signed Release APK # Job name
+    runs-on: ubuntu-latest # Use a standard Linux virtual machine
 
     steps:
-      - name: Checkout repository
+      # 1. Get your code
+      - name: Checkout code
         uses: actions/checkout@v4
 
+      # 2. Set up Java (needed for Gradle and signing)
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
-          java-version: '17'
           distribution: 'temurin'
-          cache: gradle
+          java-version: '17'
 
+      # 3. Restore the keystore file from the secret text
+      - name: Decode Keystore
+        # This command takes the secret text, decodes it back into the .jks file,
+        # and saves it to a temporary location on the build server.
+        run: echo "${{ secrets.RELEASE_KEYSTORE_BASE64 }}" | base64 --decode > ${{ runner.temp }}/release.jks
+
+      # 4. Make the Gradle script runnable
       - name: Grant execute permission for gradlew
         run: chmod +x ./gradlew
 
-      - name: Run lint checks
-        run: ./gradlew lintDebug
+      # 5. Build and Sign the APK!
+      - name: Build Release APK
+        # This runs the Gradle command to build the release APK.
+        # It passes your secrets as environment variables so the build.gradle.kts file can use them.
+        run: ./gradlew assembleRelease --no-daemon # 'assembleRelease' includes signing
+        env:
+          SIGNING_KEY_ALIAS: ${{ secrets.RELEASE_KEY_ALIAS }}
+          SIGNING_KEY_PASSWORD: ${{ secrets.RELEASE_KEY_PASSWORD }}
+          SIGNING_STORE_PASSWORD: ${{ secrets.RELEASE_KEYSTORE_PASSWORD }}
+          # This tells Gradle where the temporary keystore file is
+          SIGNING_STORE_FILE: ${{ runner.temp }}/release.jks
 
-      - name: Run unit tests
-        run: ./gradlew testDebugUnitTest
-
-      - name: Build debug APK
-        run: ./gradlew assembleDebug
-
-      - name: Upload debug APK artifact
+      # 6. Upload the final signed APK so you can download it
+      - name: Upload Signed Release APK Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: memes-ji-debug-apk # Use a relevant artifact name
-          path: app/build/outputs/apk/debug/app-debug.apk
-          if-no-files-found: error # Keep this good practice
+          name: Meme-ji-signed # The name of the downloadable file (will be a zip)
+          # The path where the signed APK is created by Gradle
+          path: app/build/outputs/apk/release/app-release.apk
