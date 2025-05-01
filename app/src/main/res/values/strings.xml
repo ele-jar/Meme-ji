@@ -20,28 +20,22 @@
     <string name="permission_rationale">Storage access is needed to save memes.</string>
     <string name="ok">OK</string>
     <string name="permission_needed_download">Storage permission needed to download.</string>
-    <string name="download_url_not_available">Download URL for %1$s is not available.</string>
-    <string name="bundle_download_starting">Starting download for %1$s...</string>
-    <string name="bundle_download_success">%1$s downloaded successfully.</string>
-    <string name="bundle_download_failed">Failed to download %1$s: %2$s</string>
-    <string name="bundle_download_cancelled">Download for %1$s cancelled.</string>
     <string name="version">Version</string>
     <string name="developer">Developer</string>
-    <string name="developer_name">ele-jar</string> 
-    
-    <string name="total_memes_title">Total Memes</string> 
-    <string name="total_memes_loading">Loading count...</string> 
-    <string name="total_memes_desc">Total available memes in the database</string> 
+    <string name="developer_name">ele-jar</string>
+    <string name="total_memes_title">Total Memes</string>
+    <string name="total_memes_loading">Loading count...</string>
+    <string name="total_memes_desc">Total available memes in the database</string>
     <string name="source_code_title">Source Code</string>
-    <string name="source_code_url">github.com/ele-jar/Meme-ji</string> 
+    <string name="source_code_url">github.com/ele-jar/Meme-ji</string>
     <string name="more_header_info">Information</string>
     <string name="more_header_contribute">Contribute</string>
     <string name="more_header_more">More</string>
-    <string name="more_header_downloads">Downloads</string>
-    <string name="share_app_title">Share App</string> 
-    <string name="share_app_desc">Share this app with friends</string> 
-    <string name="share_app_subject">Check out Memes Ji App!</string> 
-    <string name="share_app_text">Hey! Check out this cool meme app I found - Memes Ji: https://github.com/ele-jar/Meme-ji/actions/runs/14755718284/artifacts/3037878455</string> 
+    <string name="more_header_update">App Update</string> <!-- Changed from Downloads -->
+    <string name="share_app_title">Share App</string>
+    <string name="share_app_desc">Share this app with friends</string>
+    <string name="share_app_subject">Check out Memes Ji App!</string>
+    <string name="share_app_text">Hey! Check out this cool meme app I found - Memes Ji: https://github.com/ele-jar/Meme-ji/actions/runs/14755718284/artifacts/3037878455</string>
     <string name="more_report_bug">Report a Bug</string>
     <string name="more_report_bug_desc">Found an issue? Let us know</string>
     <string name="more_translate">Help Translate</string>
@@ -52,9 +46,9 @@
     <string name="more_socials">Developer Profile</string>
     <string name="more_socials_desc">Check out other projects</string>
     <string name="could_not_open_link">Could not open the link.</string>
-    <string name="url_report_bug">https://github.com/ele-jar/Meme-ji/issues</string> <!-- Updated -->
-    <string name="url_translate">https://youtu.be/dQw4w9WgXcQ</string> <!-- Updated (example) -->
-    <string name="url_developer_profile">https://github.com/ele-jar</string> <!-- Updated -->
+    <string name="url_report_bug">https://github.com/ele-jar/Meme-ji/issues</string>
+    <string name="url_translate">https://github.com/ele-jar/Meme-ji#translation</string>
+    <string name="url_developer_profile">https://github.com/ele-jar</string>
     <string name="error_network">Network error. Please check your connection.</string>
 
     <string name="cutie_mode">Cutie Mode</string>
@@ -69,15 +63,14 @@
     <string name="preparing_share">Preparing image for sharing...</string>
     <string name="share_meme_title">Share Meme</string>
     <string name="error_preparing_share">Could not prepare image for sharing.</string>
-    <string name="share_error">Error sharing meme.</string>
+    <string name="share_error">Error sharing app.</string> <!-- Changed context -->
     <string name="share_via">Share via</string>
     <string name="action_search">Search</string>
-    <string name="action_settings">Settings</string> <!-- Added for toolbar icon -->
+    <string name="action_settings">Settings</string>
     <string name="cancel">Cancel</string>
 
-    <string name="download_classic_bundle">Classic Memes Bundle</string>
-    <string name="download_sad_bundle">Sad Memes Bundle</string>
-    <string name="download_relatable_bundle">Relatable Memes Bundle</string>
+    <!-- Removed Download Bundle strings -->
+
     <string name="category_image_description">Image representing the category</string>
     <string name="meme_image_description">Meme image</string>
     <string name="title_home">Home</string>
@@ -85,4 +78,12 @@
     <string name="title_more">More</string>
 
     <string name="download_failed_single">Failed to start download for %1$s.</string>
+
+    <!-- New strings for App Update section -->
+    <string name="changelog">Changelog</string>
+    <string name="version_info_format">Version: %1$s</string>
+    <string name="release_date_format">Released: %1$s</string>
+    <string name="download_new_version">Download New Version</string>
+    <string name="error_loading_app_info">Could not load update information.</string>
+
 </resources>
