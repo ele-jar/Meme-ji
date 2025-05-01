@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- State when checked (ON) - Use primary color, maybe slightly less intense if desired -->
+    <item android:color="?attr/colorPrimary" android:state_checked="true" android:alpha="0.6"/> <!-- Example: 60% alpha Primary -->
+    <!-- Default state (unchecked / OFF) - Use a neutral surface/variant color -->
+    <item android:color="?attr/colorSurfaceVariant"/>
+</selector>
