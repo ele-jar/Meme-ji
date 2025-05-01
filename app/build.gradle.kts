@@ -1,6 +1,5 @@
 import java.io.File
 
-
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
@@ -8,8 +7,6 @@ plugins {
     id("org.jetbrains.kotlin.kapt")
     alias(libs.plugins.androidx.navigation.safeargs.kotlin)
 }
-
-
 
 android {
     namespace = "com.example.memesji"
@@ -20,7 +17,7 @@ android {
         minSdk = 24
         targetSdk = 34
         versionCode = 1
-        versionName = "1.0" // Keep this defined here
+        versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -41,11 +38,10 @@ android {
                 this.keyAlias = keyAlias
                 this.keyPassword = keyPassword
             } else {
-                 println("!!! Release signing config not fully set up. Using debug signing for local release build.")
+                 println("!!! Release signing config not fully set up via environment/properties.")
             }
         }
     }
-
 
     buildTypes {
         release {
@@ -54,29 +50,25 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-             if (signingConfigs.getByName("release").storeFile != null) {
-                  signingConfig = signingConfigs.getByName("release")
-             } else {
-                  println("!!! Release signing config incomplete, release build might fail or use debug signing.")
-             }
+            if (signingConfigs.getByName("release").storeFile != null) {
+                 signingConfig = signingConfigs.getByName("release")
+            } else {
+                 println("!!! Release signing config incomplete, release build might fail or use debug signing.")
+                 signingConfig = signingConfigs.getByName("debug") // Fallback to debug if release isn't configured
+            }
         }
         debug {
-             isMinifyEnabled = false
+            isMinifyEnabled = false
         }
     }
 
-    // --- Use applicationVariants (older API but often works) ---
-    applicationVariants.all { // Use 'all' to configure all variants (debug, release, etc.)
-        outputs.all {
-            
-
-             
-                 outputFileName = "Meme-ji-v1.0.apk"
-            
+    applicationVariants.all {
+        if (buildType.name == "release") {
+            outputs.all {
+                outputFileName = "Meme-ji-v1.0.apk"
+            }
         }
     }
-    
-
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
@@ -91,8 +83,7 @@ android {
         buildConfig = true
     }
 
-} // End of android block
-
+}
 
 dependencies {
     implementation(libs.androidx.core.ktx)
