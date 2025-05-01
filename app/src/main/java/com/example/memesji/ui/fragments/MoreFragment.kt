@@ -28,8 +28,6 @@ class MoreFragment : Fragment() {
     private val binding get() = _binding!!
     private val viewModel: MemeViewModel by activityViewModels()
 
-    // Removed memeBundles map
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enterTransition = MaterialFadeThrough()
@@ -60,7 +58,14 @@ class MoreFragment : Fragment() {
         setupMoreSection()
         setupClickListeners()
         observeViewModel()
-        viewModel.fetchAppUpdateInfo() // Fetch info when view is created
+        // Removed fetch call from here
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // Fetch app update info every time the fragment becomes active
+        Log.d("MoreFragment", "onResume called, fetching app update info.")
+        viewModel.fetchAppUpdateInfo()
     }
 
 
@@ -68,7 +73,7 @@ class MoreFragment : Fragment() {
         binding.headerInfo.headerText.text = getString(R.string.more_header_info)
         binding.headerContribute.headerText.text = getString(R.string.more_header_contribute)
         binding.headerMore.headerText.text = getString(R.string.more_header_more)
-        binding.headerUpdate.headerText.text = getString(R.string.more_header_update) // Updated header ID
+        binding.headerUpdate.headerText.text = getString(R.string.more_header_update)
     }
 
 
@@ -149,14 +154,11 @@ class MoreFragment : Fragment() {
         }
         binding.itemSocials.root.setOnClickListener { openUrl(getString(R.string.url_developer_profile)) }
 
-        // Removed download bundle listeners
+        binding.itemSourceCode.root.setOnClickListener { openUrl("https://" + getString(R.string.source_code_url)) }
 
-         binding.itemSourceCode.root.setOnClickListener { openUrl("https://" + getString(R.string.source_code_url)) }
-
-        // Click listener for the new download button is set in observeViewModel when data is available
+        // Download button click listener is set dynamically in observeViewModel
     }
 
-    // Removed downloadBundle function
 
     private fun shareApp() {
         try {
@@ -182,8 +184,8 @@ class MoreFragment : Fragment() {
          viewModel.isAppInfoLoading.observe(viewLifecycleOwner) { isLoading ->
              binding.progressBarAppInfo.isVisible = isLoading
              if (isLoading) {
-                 binding.textViewAppInfoError.isVisible = false // Hide error while loading
-                 binding.updateSection.isVisible = false // Hide content while loading
+                 binding.textViewAppInfoError.isVisible = false
+                 binding.updateSection.isVisible = false
              }
          }
 
@@ -193,7 +195,7 @@ class MoreFragment : Fragment() {
              binding.textViewAppInfoError.isVisible = error != null && !isLoading
              if(binding.textViewAppInfoError.isVisible) {
                  binding.textViewAppInfoError.text = error ?: getString(R.string.error_loading_app_info)
-                 binding.updateSection.isVisible = false // Hide content on error
+                 binding.updateSection.isVisible = false
              }
          }
 
@@ -204,7 +206,7 @@ class MoreFragment : Fragment() {
             val shouldShowUpdate = appInfo != null && appInfo.showDownload && error == null && !isLoading
 
             binding.updateSection.isVisible = shouldShowUpdate
-            binding.headerUpdate.root.isVisible = shouldShowUpdate // Show/hide header with section
+            binding.headerUpdate.root.isVisible = shouldShowUpdate
 
             if (shouldShowUpdate) {
                 binding.textViewUpdateVersion.text = getString(R.string.version_info_format, appInfo?.version ?: "N/A")
@@ -217,8 +219,6 @@ class MoreFragment : Fragment() {
             }
          }
      }
-
-    // Removed setDownloadButtonsEnabled function
 
     private fun openPlayStoreForRating() {
         val packageName = context?.packageName ?: return
