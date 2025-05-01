@@ -1,4 +1,5 @@
 import java.io.File
+import com.android.build.api.variant.ApplicationAndroidComponentsExtension
 
 plugins {
     alias(libs.plugins.android.application)
@@ -17,7 +18,7 @@ android {
         minSdk = 24
         targetSdk = 34
         versionCode = 1
-        versionName = "1.0"
+        versionName = "1.0" // Keep this defined here
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -38,14 +39,17 @@ android {
                 this.keyAlias = keyAlias
                 this.keyPassword = keyPassword
             } else {
-                println("!!! Release signing config environment variables not set or keystore file not found. CI should provide secrets.")
+                 println("!!! Release signing config environment variables not set or keystore file not found. CI should provide secrets.")
+                 // Fallback for local builds if needed, though CI should handle signing
+                 // For local release builds without env vars, you might need a debug fallback or local properties.
+                 // This setup primarily targets CI.
             }
         }
     }
 
     buildTypes {
         release {
-            isMinifyEnabled = true // Keep this true for release builds
+            isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -54,31 +58,20 @@ android {
         }
         debug {
              isMinifyEnabled = false
-             // Optionally use a debug signing key if needed locally, but not required for assembleDebug
-             // signingConfig = signingConfigs.getByName("debug")
         }
     }
 
-    
-    onVariantProperties {
-        // Check if it's the release build type
-        if (buildType == "release") {
-            // Access artifacts and modify the output APK name
-            artifacts.use {
-                it.get(com.android.build.api.artifact.SingleArtifact.APK)
-                    .toTransform(
-                        com.android.build.api.artifact.SingleArtifact.APK,
-                        { apkDirectory -> apkDirectory }, // Input directory
-                        { _ -> null }, // File filter (null means process all)
-                        { outputDirectory ->
-                            val version = versionName.getOrElse("unknown")
-                            File(outputDirectory, "Meme-ji-v${version}.apk")
-                        }
-                    )
-            }
+    // --- Corrected Variant API block for static naming ---
+    val components: ApplicationAndroidComponentsExtension by extensions
+    components.onVariants(selector().withBuildType("release")) { variant ->
+        variant.outputs.all { output -> // output type is com.android.build.api.variant.VariantOutput
+            // Get the Property<String> for the output file name
+            val outputFileNameProp = output.outputFileName
+            // Set the property to the desired static name
+            outputFileNameProp.set("Meme-ji-v1.0.apk") // Hardcode the name here
         }
     }
-    // --- End of New Variant API block ---
+    // --- End of Corrected Variant API block ---
 
 
     compileOptions {
