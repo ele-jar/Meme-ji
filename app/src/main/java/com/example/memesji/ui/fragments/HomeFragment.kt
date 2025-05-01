@@ -21,7 +21,6 @@ import androidx.core.view.isVisible
 import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import com.bumptech.glide.Glide
@@ -98,60 +97,77 @@ class HomeFragment : Fragment() {
     }
 
     private fun observeViewModel() {
-        // Consolidate state observation logic
-        val stateObserver = Observer<Any> { _ -> // Re-evaluate UI on any change
-            val memes = viewModel.filteredMemes.value ?: emptyList()
+        // Observe filtered memes list
+        viewModel.filteredMemes.observe(viewLifecycleOwner) { memes ->
             val isLoading = viewModel.isLoading.value ?: false
             val error = viewModel.error.value
-            val isRefreshing = binding.swipeRefreshLayout.isRefreshing
-            val hasData = memes.isNotEmpty()
+            val hasData = !memes.isNullOrEmpty()
 
-            // Determine visibility based on current state
-            val showLoading = isLoading && !isRefreshing && !hasData
-            val showErrorView = !isLoading && error != null
-            val showNoMemesView = !isLoading && !showErrorView && !hasData
-            val showRecyclerView = !isLoading && !showErrorView && hasData
+            binding.recyclerViewMemes.isVisible = !isLoading && error == null && hasData
+            memeAdapter.submitList(memes)
 
-            // Update Visibility
-            binding.progressBar.isVisible = showLoading
-            binding.textViewError.isVisible = showErrorView
-            binding.textViewNoMemes.isVisible = showNoMemesView
-            binding.recyclerViewMemes.isVisible = showRecyclerView
-
-            // Update Text Content
-            if (showErrorView) {
-                binding.textViewError.text = error // Error text comes combined from ViewModel
-            }
-            if (showNoMemesView) {
+            // Update empty/error state (dependent on loading/error too)
+            binding.textViewNoMemes.isVisible = !isLoading && error == null && !hasData
+            if (binding.textViewNoMemes.isVisible) {
                 updateNoMemesText()
             }
-
-            // Update RecyclerView Data (only if potentially visible)
-            if (showRecyclerView) {
-                memeAdapter.submitList(memes)
-            } else if (!isLoading && !showErrorView){ // Clear list if not loading and no error (i.e., empty state)
-                 memeAdapter.submitList(emptyList())
-            }
         }
 
-        // Observe all relevant LiveData sources triggering the state observer
-        viewModel.filteredMemes.observe(viewLifecycleOwner, stateObserver)
-        viewModel.isLoading.observe(viewLifecycleOwner, stateObserver)
-        viewModel.error.observe(viewLifecycleOwner, stateObserver)
-
-        // Handle swipe refresh finishing separately
+        // Observe loading state
         viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
-            if (!isLoading && binding.swipeRefreshLayout.isRefreshing) {
-                binding.swipeRefreshLayout.isRefreshing = false
+            val error = viewModel.error.value
+            val hasData = !(viewModel.filteredMemes.value.isNullOrEmpty())
+
+            if (!isLoading) {
+                 binding.swipeRefreshLayout.isRefreshing = false
+            }
+            // Show progress only when loading, not refreshing, and no data/error shown yet
+            binding.progressBar.isVisible = isLoading && !binding.swipeRefreshLayout.isRefreshing && !hasData && error == null
+
+            // Re-evaluate error/empty visibility when loading stops
+            if (!isLoading) {
+                binding.textViewError.isVisible = error != null
+                binding.textViewNoMemes.isVisible = error == null && !hasData
+                if(binding.textViewError.isVisible) {
+                     binding.textViewError.text = error ?: getString(R.string.unknown_error)
+                }
+                if(binding.textViewNoMemes.isVisible) {
+                    updateNoMemesText()
+                }
+                 binding.recyclerViewMemes.isVisible = error == null && hasData
             }
         }
 
-        // Handle share status separately
-        viewModel.shareStatus.observe(viewLifecycleOwner) { event ->
-            event?.getContentIfNotHandled()?.let { status ->
-                updateShareProgress(status)
+        // Observe error state
+        viewModel.error.observe(viewLifecycleOwner) { error ->
+            val isLoading = viewModel.isLoading.value ?: false
+            val hasData = !(viewModel.filteredMemes.value.isNullOrEmpty())
+
+            binding.textViewError.isVisible = error != null && !isLoading
+            if (binding.textViewError.isVisible) {
+                 binding.textViewError.text = error ?: getString(R.string.unknown_error)
+            }
+
+            // Hide other views if error is shown (unless loading)
+            if (error != null && !isLoading) {
+                 binding.recyclerViewMemes.isVisible = false
+                 binding.textViewNoMemes.isVisible = false
+                 binding.progressBar.isVisible = false
+            } else {
+                 // Re-evaluate normal visibility if error is cleared
+                 binding.recyclerViewMemes.isVisible = !isLoading && hasData
+                 binding.textViewNoMemes.isVisible = !isLoading && !hasData
+                 if (binding.textViewNoMemes.isVisible) updateNoMemesText()
+                 binding.progressBar.isVisible = isLoading && !binding.swipeRefreshLayout.isRefreshing && !hasData
             }
         }
+
+        // Observe share status
+         viewModel.shareStatus.observe(viewLifecycleOwner) { event ->
+             event?.getContentIfNotHandled()?.let { status ->
+                 updateShareProgress(status)
+             }
+         }
     }
 
 
