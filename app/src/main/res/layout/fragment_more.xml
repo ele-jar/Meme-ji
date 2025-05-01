@@ -6,136 +6,212 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:clipToPadding="false"
+    android:paddingBottom="16dp"
     tools:context=".ui.fragments.MoreFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingBottom="16dp">
+        android:paddingHorizontal="16dp">
 
         <!-- Info Section -->
-        <include layout="@layout/item_more_header"
-            android:id="@+id/headerInfo" />
-        <include layout="@layout/item_more_info"
-            android:id="@+id/itemAppVersion" />
-        <include layout="@layout/item_more_info"
-            android:id="@+id/itemDeveloper" />
-        <include layout="@layout/item_more_info"
-            android:id="@+id/itemTotalMemes" />
-        <include layout="@layout/item_more_info"
-            android:id="@+id/itemSourceCode" />
+        <include
+            android:id="@+id/headerInfo"
+            layout="@layout/list_header" />
 
-        <!-- Contribute Section -->
-        <include layout="@layout/item_more_header"
-            android:id="@+id/headerContribute" />
-        <include layout="@layout/item_more_info"
-            android:id="@+id/itemShareApp" />
-        <include layout="@layout/item_more_info"
-            android:id="@+id/itemReportBug"/>
-        <include layout="@layout/item_more_info"
-            android:id="@+id/itemTranslate"/>
-
-        <!-- More Section -->
-        <include layout="@layout/item_more_header"
-            android:id="@+id/headerMore" />
-        <include layout="@layout/item_more_info"
-            android:id="@+id/itemSettings"/>
-        <include layout="@layout/item_more_info"
-            android:id="@+id/itemSocials" />
-
-         <!-- Update Section Header -->
-         <include layout="@layout/item_more_header"
-            android:id="@+id/headerUpdate"
-            android:visibility="gone"
-            tools:visibility="visible"/>
-
-        <!-- Progress Bar for loading App Info -->
-         <ProgressBar
-             android:id="@+id/progress_bar_app_info"
-             style="?android:attr/progressBarStyleHorizontal"
-             android:layout_width="match_parent"
-             android:layout_height="wrap_content"
-             android:layout_marginHorizontal="16dp"
-             android:layout_marginTop="8dp"
-             android:indeterminate="true"
-             android:visibility="gone"
-             tools:visibility="visible" />
-
-        <!-- Error Message for App Info -->
-        <TextView
-            android:id="@+id/text_view_app_info_error"
+        <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="16dp"
-            android:layout_marginTop="8dp"
-            android:textAppearance="?attr/textAppearanceBodyMedium"
-            android:textColor="?attr/colorError"
-            android:gravity="center"
-            android:visibility="gone"
-            tools:visibility="visible"
-            tools:text="Failed to load update info"/>
+            app:cardElevation="2dp"
+            app:cardUseCompatPadding="true">
 
-         <!-- Update Section Content -->
-         <LinearLayout
-             android:id="@+id/update_section"
-             android:layout_width="match_parent"
-             android:layout_height="wrap_content"
-             android:orientation="vertical"
-             android:paddingHorizontal="16dp"
-             android:paddingTop="8dp"
-             android:paddingBottom="16dp"
-             android:visibility="gone"
-             tools:visibility="visible">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-             <TextView
-                 android:id="@+id/text_view_update_version"
-                 android:layout_width="wrap_content"
-                 android:layout_height="wrap_content"
-                 android:textAppearance="?attr/textAppearanceBodyMedium"
-                 android:textColor="?attr/colorOnSurface"
-                 tools:text="Version: v2.1.0" />
+                <include
+                    android:id="@+id/itemAppVersion"
+                    layout="@layout/list_item_view" />
 
-              <TextView
-                 android:id="@+id/text_view_update_date"
-                 android:layout_width="wrap_content"
-                 android:layout_height="wrap_content"
-                 android:textAppearance="?attr/textAppearanceBodySmall"
-                 android:textColor="?attr/colorOnSurfaceVariant"
-                 android:layout_marginTop="4dp"
-                 tools:text="Released: 2025-05-01" />
+                <include
+                    android:id="@+id/itemDeveloper"
+                    layout="@layout/list_item_view" />
 
-              <TextView
-                 android:layout_width="wrap_content"
-                 android:layout_height="wrap_content"
-                 android:text="@string/changelog"
-                 android:textAppearance="?attr/textAppearanceTitleMedium"
-                 android:textColor="?attr/colorOnSurface"
-                 android:layout_marginTop="16dp"/>
+                <include
+                    android:id="@+id/itemTotalMemes"
+                    layout="@layout/list_item_view" />
 
-              <TextView
-                 android:id="@+id/text_view_changelog"
-                 android:layout_width="match_parent"
-                 android:layout_height="wrap_content"
-                 android:textAppearance="?attr/textAppearanceBodyMedium"
-                 android:textColor="?attr/colorOnSurfaceVariant"
-                 android:layout_marginTop="4dp"
-                 android:lineSpacingMultiplier="1.2"
-                 tools:text="• Fixed bugs\n• Added features" />
+                <include
+                    android:id="@+id/itemSourceCode"
+                    layout="@layout/list_item_view" />
 
-             <com.google.android.material.button.MaterialButton
-                 android:id="@+id/button_download_update"
-                 style="@style/Widget.Material3.Button.Icon"
-                 android:layout_width="wrap_content"
-                 android:layout_gravity="center_horizontal"
-                 android:layout_height="wrap_content"
-                 android:layout_marginTop="16dp"
-                 android:text="@string/download_new_version"
-                 app:icon="@drawable/ic_download" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
 
-         </LinearLayout>
+        <!-- Contribute Section -->
+        <include
+            android:id="@+id/headerContribute"
+            layout="@layout/list_header" />
 
-         
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardElevation="2dp"
+            app:cardUseCompatPadding="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <include
+                    android:id="@+id/itemShareApp"
+                    layout="@layout/list_item_view" />
+
+                <include
+                    android:id="@+id/itemReportBug"
+                    layout="@layout/list_item_view" />
+
+                <include
+                    android:id="@+id/itemTranslate"
+                    layout="@layout/list_item_view" />
+
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- More Section -->
+        <include
+            android:id="@+id/headerMore"
+            layout="@layout/list_header" />
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardElevation="2dp"
+            app:cardUseCompatPadding="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <include
+                    android:id="@+id/itemSettings"
+                    layout="@layout/list_item_view" />
+                <include
+                    android:id="@+id/itemSocials"
+                    layout="@layout/list_item_view" />
+
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Update Section -->
+        <include
+            android:id="@+id/headerUpdate"
+            layout="@layout/list_header" />
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardElevation="2dp"
+            app:cardUseCompatPadding="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <include
+                    android:id="@+id/itemCheckForUpdate"
+                    layout="@layout/list_item_view" />
+
+                <ProgressBar
+                    android:id="@+id/progressBarAppInfo"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:indeterminate="true"
+                    android:visibility="gone"
+                    android:layout_marginHorizontal="16dp"
+                    android:layout_marginTop="8dp"
+                    tools:visibility="visible" />
+
+                <TextView
+                    android:id="@+id/textViewAppInfoError"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="16dp"
+                    android:layout_marginTop="8dp"
+                    android:textColor="?attr/colorError"
+                    android:visibility="gone"
+                    tools:text="Error loading update info."
+                    tools:visibility="visible" />
+
+
+                <!-- Update Details Section (Initially Gone) -->
+                <LinearLayout
+                    android:id="@+id/updateDetailsSection"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingHorizontal="16dp"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="16dp"
+                    android:visibility="gone"
+                    tools:visibility="visible">
+
+                    <TextView
+                        android:id="@+id/textViewUpdateVersion"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?attr/textAppearanceBodyMedium"
+                        android:textColor="?attr/colorOnSurfaceVariant"
+                        tools:text="Version: 2.1.1" />
+
+                    <TextView
+                        android:id="@+id/textViewUpdateDate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:textAppearance="?attr/textAppearanceBodySmall"
+                        android:textColor="?attr/colorOnSurfaceVariant"
+                        tools:text="Released: 2025-05-01" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:text="@string/changelog_title"
+                        android:textAppearance="?attr/textAppearanceTitleSmall"
+                        android:textColor="?attr/colorOnSurface" />
+
+                    <TextView
+                        android:id="@+id/textViewChangelog"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:lineSpacingMultiplier="1.2"
+                        android:textAppearance="?attr/textAppearanceBodyMedium"
+                        android:textColor="?attr/colorOnSurfaceVariant"
+                        tools:text="• Improved performance\n• Added new meme filters\n• Fixed UI bugs in dark mode" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/buttonDownloadUpdate"
+                        style="@style/Widget.Material3.Button.TonalButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end"
+                        android:layout_marginTop="16dp"
+                        android:text="@string/download_update" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
 
     </LinearLayout>
 
