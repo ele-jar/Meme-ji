@@ -13,7 +13,6 @@ import com.example.memesji.R
 import com.example.memesji.databinding.FragmentSettingsBinding
 import com.example.memesji.util.PreferencesHelper
 import com.example.memesji.viewmodel.MemeViewModel
-import com.google.android.material.transition.MaterialSharedAxis
 
 class SettingsFragment : Fragment() {
 
@@ -23,8 +22,6 @@ class SettingsFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enterTransition = MaterialSharedAxis(MaterialSharedAxis.Z, true)
-        returnTransition = MaterialSharedAxis(MaterialSharedAxis.Z, false)
     }
 
     override fun onCreateView(
