@@ -21,7 +21,6 @@ import com.example.memesji.databinding.FragmentMoreBinding
 import com.example.memesji.ui.MainActivity
 import com.example.memesji.util.EventObserver
 import com.example.memesji.viewmodel.MemeViewModel
-import com.google.android.material.transition.MaterialFadeThrough
 
 class MoreFragment : Fragment() {
 
@@ -31,7 +30,6 @@ class MoreFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enterTransition = MaterialFadeThrough()
     }
 
     override fun onCreateView(
