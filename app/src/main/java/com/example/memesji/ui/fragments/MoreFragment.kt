@@ -148,7 +148,6 @@ class MoreFragment : Fragment() {
              icon.setImageResource(R.drawable.ic_update)
          }
          binding.progressBarAppInfo.isVisible = false
-         // Remove error TextView logic binding.textViewAppInfoError.isVisible = false
          binding.updateDetailsSection.isVisible = false // Initially hidden
      }
 
@@ -165,8 +164,7 @@ class MoreFragment : Fragment() {
 
         binding.itemCheckForUpdate.root.setOnClickListener {
             Log.d("MoreFragment", "Check for update clicked.")
-            // Don't change text here, let observer handle it based on loading state
-            viewModel.checkForUpdates() // Use the renamed function
+            viewModel.checkForUpdates()
         }
         // Download button listener is set when details are shown
     }
@@ -191,21 +189,18 @@ class MoreFragment : Fragment() {
              binding.itemTotalMemes.secondaryText.isVisible = true
          }
 
-         // Observe loading state for the update check
          viewModel.isCheckingForUpdate.observe(viewLifecycleOwner) { isLoading ->
              binding.progressBarAppInfo.isVisible = isLoading
              binding.itemCheckForUpdate.root.isEnabled = !isLoading
              if (isLoading) {
                  binding.itemCheckForUpdate.secondaryText.text = getString(R.string.checking_for_updates)
-                 binding.updateDetailsSection.isVisible = false // Hide details while checking
+                 binding.updateDetailsSection.isVisible = false
              }
-             // Don't reset text here, let the result event handle it
          }
 
-         // Observe the available update details (populated only on success + update available)
          viewModel.availableUpdateInfo.observe(viewLifecycleOwner) { appInfo ->
+             // This just populates the data if available, visibility is handled by the event observer
              if (appInfo != null && appInfo.showDownload) {
-                 // This observer only populates the fields when data is available
                  binding.textViewUpdateVersion.text = getString(R.string.version_info_format, appInfo.version ?: "N/A")
                  binding.textViewUpdateDate.text = getString(R.string.release_date_format, appInfo.buildDate ?: "N/A")
                  binding.textViewChangelog.text = appInfo.changelog ?: "No changelog available."
@@ -213,31 +208,31 @@ class MoreFragment : Fragment() {
                      appInfo.downloadUrl?.let { url -> openUrl(url) }
                          ?: Toast.makeText(context, R.string.could_not_open_link, Toast.LENGTH_SHORT).show()
                  }
-                 // Visibility is handled by the result event observer below
              }
          }
 
-         // Observe the result event to show Toasts and update final UI state
          viewModel.updateCheckResultEvent.observe(viewLifecycleOwner, EventObserver { messageResId ->
             val message = getString(messageResId)
-            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
 
             // Update UI based on the *result* of the check
             when (messageResId) {
                 R.string.update_available -> {
                     binding.updateDetailsSection.isVisible = true
                     binding.itemCheckForUpdate.secondaryText.text = message
+                    // NO Toast here - seeing the details is enough feedback
                 }
                 R.string.no_update_available -> {
                     binding.updateDetailsSection.isVisible = false
-                    binding.itemCheckForUpdate.secondaryText.text = message
+                    binding.itemCheckForUpdate.secondaryText.text = message // Use the specific "You have the latest version" string
+                    Toast.makeText(context, message, Toast.LENGTH_SHORT).show() // Show Toast
                 }
                 R.string.error_checking_update -> {
                     binding.updateDetailsSection.isVisible = false
-                    binding.itemCheckForUpdate.secondaryText.text = getString(R.string.check_for_update_desc_error) // Specific error text
+                    binding.itemCheckForUpdate.secondaryText.text = getString(R.string.check_for_update_desc_error) // Specific error text for the item
+                    Toast.makeText(context, message, Toast.LENGTH_SHORT).show() // Show error Toast
                 }
                  else -> {
-                     // Should not happen, but reset to default just in case
+                     // Reset to default (shouldn't happen)
                      binding.updateDetailsSection.isVisible = false
                      binding.itemCheckForUpdate.secondaryText.text = getString(R.string.check_for_update_desc)
                  }
