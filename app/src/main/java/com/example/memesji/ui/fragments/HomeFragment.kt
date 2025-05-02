@@ -33,7 +33,7 @@ import com.example.memesji.ui.MainActivity
 import com.example.memesji.ui.adapter.MemeAdapter
 import com.example.memesji.viewmodel.MemeViewModel
 
-import com.google.android.material.transition.MaterialFadeThrough
+
 import kotlinx.coroutines.launch
 import java.io.File
 
@@ -48,8 +48,6 @@ class HomeFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enterTransition = MaterialFadeThrough()
-        exitTransition = MaterialFadeThrough()
     }
 
     override fun onCreateView(
