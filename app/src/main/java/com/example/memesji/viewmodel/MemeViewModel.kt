@@ -58,17 +58,16 @@ class MemeViewModel(application: Application) : AndroidViewModel(application) {
     private val _error = MutableLiveData<String?>()
     val error: LiveData<String?> get() = _error
 
-    private val _appInfo = MutableLiveData<AppInfo?>()
-    val appInfo: LiveData<AppInfo?> get() = _appInfo
+    // Holds the data only if an update is available and fetched successfully
+    private val _availableUpdateInfo = MutableLiveData<AppInfo?>()
+    val availableUpdateInfo: LiveData<AppInfo?> get() = _availableUpdateInfo
 
-    private val _isAppInfoLoading = MutableLiveData<Boolean>()
-    val isAppInfoLoading: LiveData<Boolean> get() = _isAppInfoLoading
+    private val _isCheckingForUpdate = MutableLiveData<Boolean>()
+    val isCheckingForUpdate: LiveData<Boolean> get() = _isCheckingForUpdate
 
-    private val _appInfoError = MutableLiveData<String?>()
-    val appInfoError: LiveData<String?> get() = _appInfoError
-
-    private val _updateCheckResultMessage = MutableLiveData<Event<String>>()
-    val updateCheckResultMessage: LiveData<Event<String>> get() = _updateCheckResultMessage
+    // Simplified event for showing results (success or failure)
+    private val _updateCheckResultEvent = MutableLiveData<Event<Int>>() // Holds String Resource ID
+    val updateCheckResultEvent: LiveData<Event<Int>> get() = _updateCheckResultEvent
 
 
     private val _singleMemeDownloadStatus = MutableLiveData<String?>()
@@ -106,7 +105,6 @@ class MemeViewModel(application: Application) : AndroidViewModel(application) {
             _totalMemeCount.value = memes?.size ?: 0
         }
         loadMemes(forceRefresh = false)
-        // Removed automatic fetchAppUpdateInfo() call from init
     }
 
     private fun setupMediators() {
@@ -277,33 +275,31 @@ class MemeViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun fetchAppUpdateInfo() {
-        if (_isAppInfoLoading.value == true) {
-            Log.d("MemeViewModel", "App info fetch already in progress.")
+    // Renamed for clarity
+    fun checkForUpdates() {
+        if (_isCheckingForUpdate.value == true) {
+            Log.d("MemeViewModel", "Update check already in progress.")
             return
         }
 
         viewModelScope.launch {
-            _isAppInfoLoading.value = true
-            _appInfoError.value = null
-            _appInfo.value = null // Clear previous info before fetching
-            Log.d("MemeViewModel", "Attempting to fetch app update info...")
+            _isCheckingForUpdate.value = true
+            _availableUpdateInfo.value = null // Clear previous details immediately
+            Log.d("MemeViewModel", "Attempting to fetch app update info manually...")
             val result = repository.getAppUpdateInfo()
             result.onSuccess { info ->
-                _appInfo.value = info
                 if (info.showDownload) {
-                    _updateCheckResultMessage.value = Event(getString(R.string.update_available))
+                    _availableUpdateInfo.value = info // Store details only if update is available
+                    _updateCheckResultEvent.value = Event(R.string.update_available) // Event indicates update available
                 } else {
-                    _updateCheckResultMessage.value = Event(getString(R.string.no_update_available))
+                    _updateCheckResultEvent.value = Event(R.string.no_update_available) // Event indicates no update
                 }
-                Log.d("MemeViewModel", "Successfully fetched app update info.")
+                Log.d("MemeViewModel", "Successfully checked for updates.")
             }.onFailure { throwable ->
                 Log.e("MemeViewModel", "Failed to fetch app update info", throwable)
-                _appInfoError.value = throwable.localizedMessage ?: "Failed to load update info"
-                _appInfo.value = null
-                _updateCheckResultMessage.value = Event(getString(R.string.error_checking_update))
+                _updateCheckResultEvent.value = Event(R.string.error_checking_update) // Event indicates error
             }
-            _isAppInfoLoading.value = false
+            _isCheckingForUpdate.value = false
         }
     }
 
