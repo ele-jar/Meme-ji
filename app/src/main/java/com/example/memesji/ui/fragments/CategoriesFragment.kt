@@ -17,7 +17,6 @@ import com.example.memesji.R
 import com.example.memesji.databinding.FragmentCategoriesBinding
 import com.example.memesji.ui.adapter.CategoryAdapter
 import com.example.memesji.viewmodel.MemeViewModel
-import com.google.android.material.transition.MaterialFadeThrough
 
 class CategoriesFragment : Fragment() {
 
@@ -29,8 +28,6 @@ class CategoriesFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enterTransition = MaterialFadeThrough()
-        exitTransition = MaterialFadeThrough()
     }
 
     override fun onCreateView(
