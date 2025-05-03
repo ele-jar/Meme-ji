@@ -26,24 +26,9 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x ./gradlew
 
-      # --- MODIFICATION 1: Clean Gradle Caches ---
-      - name: Clean Gradle Caches
-        run: |
-          rm -f ~/.gradle/caches/modules-2/modules-2.lock
-          rm -rf ~/.gradle/caches/*/plugin-resolution/
-
-      - name: Generate Navigation Safe Args # Keep this separate
-        run: ./gradlew :app:generateSafeArgsRelease --no-build-cache
-
-      # --- MODIFICATION 2: Explicitly try compiling Kotlin ---
-      # This is mainly for diagnosis - if this passes but assemble fails later,
-      # it points to a different issue during packaging.
-      - name: Compile Release Kotlin Sources
-        run: ./gradlew :app:compileReleaseKotlin --no-build-cache --rerun-tasks
-
-      # --- MODIFICATION 3: Build using --no-build-cache and --rerun-tasks ---
       - name: Build Release APK
-        run: ./gradlew assembleRelease --no-build-cache --rerun-tasks
+        run: ./gradlew assembleRelease --no-daemon
+        
         env:
           SIGNING_KEY_ALIAS: ${{ secrets.RELEASE_KEY_ALIAS }}
           SIGNING_KEY_PASSWORD: ${{ secrets.RELEASE_KEY_PASSWORD }}
