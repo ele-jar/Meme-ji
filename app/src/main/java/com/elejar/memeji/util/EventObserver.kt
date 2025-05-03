@@ -1,4 +1,4 @@
-package com.example.memesji.util
+package com.elejar.memeji.util
 
 import androidx.lifecycle.Observer
 

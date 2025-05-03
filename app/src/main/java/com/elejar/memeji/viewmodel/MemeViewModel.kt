@@ -1,4 +1,4 @@
-package com.example.memesji.viewmodel
+package com.elejar.memeji.viewmodel
 
 import android.app.Application
 import android.net.Uri
@@ -9,14 +9,14 @@ import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.core.content.FileProvider
 import androidx.lifecycle.*
-import com.example.memesji.R
-import com.example.memesji.data.AppInfo
-import com.example.memesji.data.CategoryItem
-import com.example.memesji.data.Meme
-import com.example.memesji.data.remote.RetrofitInstance
-import com.example.memesji.repository.MemeRepository
-import com.example.memesji.util.Event
-import com.example.memesji.util.PreferencesHelper
+import com.elejar.memeji.R
+import com.elejar.memeji.data.AppInfo
+import com.elejar.memeji.data.CategoryItem
+import com.elejar.memeji.data.Meme
+import com.elejar.memeji.data.remote.RetrofitInstance
+import com.elejar.memeji.repository.MemeRepository
+import com.elejar.memeji.util.Event
+import com.elejar.memeji.util.PreferencesHelper
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job

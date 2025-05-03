@@ -1,4 +1,4 @@
-package com.example.memesji.repository
+package com.elejar.memeji.repository
 
 import android.app.DownloadManager
 import android.content.ContentValues
@@ -13,11 +13,11 @@ import androidx.annotation.RequiresApi
 import androidx.core.content.FileProvider
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.example.memesji.R
-import com.example.memesji.data.AppInfo
-import com.example.memesji.data.CategoryItem
-import com.example.memesji.data.Meme
-import com.example.memesji.data.remote.ApiService
+import com.elejar.memeji.R
+import com.elejar.memeji.data.AppInfo
+import com.elejar.memeji.data.CategoryItem
+import com.elejar.memeji.data.Meme
+import com.elejar.memeji.data.remote.ApiService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.withContext

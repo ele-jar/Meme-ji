@@ -1,4 +1,4 @@
-package com.example.memesji.ui
+package com.elejar.memeji.ui
 
 import android.Manifest
 import android.app.DownloadManager
@@ -28,12 +28,12 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import com.example.memesji.R
-import com.example.memesji.data.Meme
-import com.example.memesji.databinding.ActivityMainBinding
-import com.example.memesji.ui.fragments.CategoryMemesFragment
-import com.example.memesji.ui.fragments.MoreFragmentDirections // Import directions
-import com.example.memesji.viewmodel.MemeViewModel
+import com.elejar.memeji.R
+import com.elejar.memeji.data.Meme
+import com.elejar.memeji.databinding.ActivityMainBinding
+import com.elejar.memeji.ui.fragments.CategoryMemesFragment
+import com.elejar.memeji.ui.fragments.MoreFragmentDirections // Import directions
+import com.elejar.memeji.viewmodel.MemeViewModel
 import com.google.android.material.color.DynamicColors
 import com.google.android.material.snackbar.Snackbar
 import java.util.regex.Pattern

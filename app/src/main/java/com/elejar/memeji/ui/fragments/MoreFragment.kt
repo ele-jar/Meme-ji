@@ -1,4 +1,4 @@
-package com.example.memesji.ui.fragments
+package com.elejar.memeji.ui.fragments
 
 import android.content.Intent
 import android.net.Uri
@@ -15,12 +15,12 @@ import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
-import com.example.memesji.BuildConfig
-import com.example.memesji.R
-import com.example.memesji.databinding.FragmentMoreBinding
-import com.example.memesji.ui.MainActivity
-import com.example.memesji.util.EventObserver
-import com.example.memesji.viewmodel.MemeViewModel
+import com.elejar.memeji.BuildConfig
+import com.elejar.memeji.R
+import com.elejar.memeji.databinding.FragmentMoreBinding
+import com.elejar.memeji.ui.MainActivity
+import com.elejar.memeji.util.EventObserver
+import com.elejar.memeji.viewmodel.MemeViewModel
 
 class MoreFragment : Fragment() {
 

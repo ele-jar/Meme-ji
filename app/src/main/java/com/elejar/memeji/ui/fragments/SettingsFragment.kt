@@ -1,4 +1,4 @@
-package com.example.memesji.ui.fragments
+package com.elejar.memeji.ui.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,10 +9,10 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import com.example.memesji.R
-import com.example.memesji.databinding.FragmentSettingsBinding
-import com.example.memesji.util.PreferencesHelper
-import com.example.memesji.viewmodel.MemeViewModel
+import com.elejar.memeji.R
+import com.elejar.memeji.databinding.FragmentSettingsBinding
+import com.elejar.memeji.util.PreferencesHelper
+import com.elejar.memeji.viewmodel.MemeViewModel
 
 class SettingsFragment : Fragment() {
 

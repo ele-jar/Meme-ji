@@ -1,4 +1,4 @@
-package com.example.memesji.ui.adapter
+package com.elejar.memeji.ui.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -7,9 +7,9 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
-import com.example.memesji.R
-import com.example.memesji.data.CategoryItem
-import com.example.memesji.databinding.ItemCategoryBinding // Assuming you update the layout name
+import com.elejar.memeji.R
+import com.elejar.memeji.data.CategoryItem
+import com.elejar.memeji.databinding.ItemCategoryBinding // Assuming you update the layout name
 
 class CategoryAdapter(
     private val onCategoryClick: (String) -> Unit

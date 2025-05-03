@@ -1,4 +1,4 @@
-package com.example.memesji.util
+package com.elejar.memeji.util
 
 /**
  * Used as a wrapper for data that is exposed via a LiveData that represents an event.

@@ -1,4 +1,4 @@
-package com.example.memesji.data
+package com.elejar.memeji.data
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
