@@ -12,12 +12,12 @@ object RetrofitInstance {
 
     private const val BASE_URL = "https://raw.githubusercontent.com/"
 
-    // Configure logging interceptor based on build type
+   
     private val loggingInterceptor = HttpLoggingInterceptor().apply {
         level = if (BuildConfig.DEBUG) {
             HttpLoggingInterceptor.Level.BODY
         } else {
-            HttpLoggingInterceptor.Level.NONE // No logging in release builds
+            HttpLoggingInterceptor.Level.NONE
         }
     }
 
