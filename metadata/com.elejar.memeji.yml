@@ -1,0 +1,37 @@
+Categories:
+  - Internet
+  - Multimedia
+  - Fun
+License: Apache-2.0
+WebSite: https://github.com/ele-jar/Meme-ji
+SourceCode: https://github.com/ele-jar/Meme-ji
+IssueTracker: https://github.com/ele-jar/Meme-ji/issues
+AutoName: Meme ji
+Summary: Browse and share memes from an online collection
+Description: |
+    Meme ji allows you to explore, view, and share a diverse collection of memes
+    fetched from an online source.
+
+    Features:
+    * View memes from an online JSON database.
+    * Browse memes by categories automatically generated from tags.
+    * Search for memes by name or tag.
+    * Share memes easily with other apps.
+    * Download memes to your device.
+    * Includes an optional 'Cutie Mode' setting to hide potentially sensitive
+      content tagged '18+'.
+    * Checks for app updates via GitHub (Note: F-Droid provides updates via the
+      F-Droid client).
+RepoType: git
+Repo: https://github.com/ele-jar/Meme-ji.git
+Builds:
+  - versionName: "1.0.0"
+    versionCode: 1
+    commit: v1.0.0
+    subdir: app
+    gradle: 
+    - yes
+AutoUpdateMode: Version %vname%
+UpdateCheckMode: Tags
+CurrentVersion: "1.0.0"
+CurrentVersionCode: 1
