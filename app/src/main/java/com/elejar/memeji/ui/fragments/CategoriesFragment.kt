@@ -1,4 +1,4 @@
-package com.example.memesji.ui.fragments
+package com.elejar.memeji.ui.fragments
 
 import android.content.res.Configuration
 import android.os.Bundle
@@ -13,10 +13,10 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
-import com.example.memesji.R
-import com.example.memesji.databinding.FragmentCategoriesBinding
-import com.example.memesji.ui.adapter.CategoryAdapter
-import com.example.memesji.viewmodel.MemeViewModel
+import com.elejar.memeji.R
+import com.elejar.memeji.databinding.FragmentCategoriesBinding
+import com.elejar.memeji.ui.adapter.CategoryAdapter
+import com.elejar.memeji.viewmodel.MemeViewModel
 
 class CategoriesFragment : Fragment() {
 

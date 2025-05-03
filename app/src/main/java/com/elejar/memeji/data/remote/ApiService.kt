@@ -1,7 +1,7 @@
-package com.example.memesji.data.remote
+package com.elejar.memeji.data.remote
 
-import com.example.memesji.data.AppInfo
-import com.example.memesji.data.Meme
+import com.elejar.memeji.data.AppInfo
+import com.elejar.memeji.data.Meme
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Headers 

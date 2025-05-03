@@ -1,4 +1,4 @@
--keep class com.example.memesji.MemesJiApp { *; }
+-keep class com.elejar.memeji.MemesJiApp { *; }
 
 -keep public class * extends androidx.appcompat.app.AppCompatActivity
 
@@ -15,10 +15,10 @@
     <init>(...);
 }
 
--keepclasseswithmembers class com.example.memesji.data.** {
+-keepclasseswithmembers class com.elejar.memeji.data.** {
     *;
 }
--keep class com.example.memesji.data.** { *; }
+-keep class com.elejar.memeji.data.** { *; }
 
 -keep class * implements android.os.Parcelable {
   public static final android.os.Parcelable$Creator *;
@@ -27,7 +27,7 @@
     public static final ** CREATOR;
 }
 
--keep interface com.example.memesji.data.remote.ApiService { *; }
+-keep interface com.elejar.memeji.data.remote.ApiService { *; }
 
 -keep class retrofit2.** { *; }
 -keep interface retrofit2.** { *; }

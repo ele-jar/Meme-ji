@@ -1,6 +1,6 @@
-package com.example.memesji.data.remote
+package com.elejar.memeji.data.remote
 
-import com.example.memesji.BuildConfig
+import com.elejar.memeji.BuildConfig
 import com.google.gson.GsonBuilder
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor

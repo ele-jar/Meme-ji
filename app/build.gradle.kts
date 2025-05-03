@@ -12,11 +12,11 @@ plugins {
 
 
 android {
-    namespace = "com.example.memesji"
+    namespace = "com.elejar.memeji"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.memesji"
+        applicationId = "com.elejar.memeji"
         minSdk = 24
         targetSdk = 34
         versionCode = 1

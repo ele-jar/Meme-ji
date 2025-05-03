@@ -1,4 +1,4 @@
-package com.example.memesji
+package com.elejar.memeji
 
 import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate

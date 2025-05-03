@@ -1,4 +1,4 @@
-package com.example.memesji.ui.fragments
+package com.elejar.memeji.ui.fragments
 
 import android.app.Dialog
 import android.content.Intent
@@ -25,13 +25,13 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
-import com.example.memesji.R
-import com.example.memesji.data.Meme
-import com.example.memesji.databinding.FragmentHomeBinding
+import com.elejar.memeji.R
+import com.elejar.memeji.data.Meme
+import com.elejar.memeji.databinding.FragmentHomeBinding
 
-import com.example.memesji.ui.MainActivity
-import com.example.memesji.ui.adapter.MemeAdapter
-import com.example.memesji.viewmodel.MemeViewModel
+import com.elejar.memeji.ui.MainActivity
+import com.elejar.memeji.ui.adapter.MemeAdapter
+import com.elejar.memeji.viewmodel.MemeViewModel
 
 
 import kotlinx.coroutines.launch
