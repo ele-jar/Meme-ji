@@ -1,0 +1,13 @@
+Meme-ji allows you to explore, view, and share a diverse collection of memes
+fetched from an online source.
+
+Features:
+* View memes from an online JSON database.
+* Browse memes by categories automatically generated from tags.
+* Search for memes by name or tag.
+* Share memes easily with other apps.
+* Download memes to your device.
+* Includes an optional 'Cutie Mode' setting to hide potentially sensitive
+  content tagged '18+'.
+* Checks for app updates via GitHub (Note: F-Droid provides updates via the
+  F-Droid client).
