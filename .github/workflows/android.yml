@@ -27,8 +27,7 @@ jobs:
         run: chmod +x ./gradlew
 
       - name: Build Release APK
-        # Using clean and assembleRelease. Add --info for more detailed logs if it fails again.
-        run: ./gradlew clean assembleRelease --info
+        run: ./gradlew clean assembleRelease
         env:
           SIGNING_KEY_ALIAS: ${{ secrets.RELEASE_KEY_ALIAS }}
           SIGNING_KEY_PASSWORD: ${{ secrets.RELEASE_KEY_PASSWORD }}
@@ -39,5 +38,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: Meme-ji-unzip-to-down-apk
-          # Using wildcard for version robustness
           path: app/build/outputs/apk/release/Meme-ji-v*-release.apk
