@@ -2,9 +2,7 @@
 
 <p align="center">
 
-  <img src="app/src/main/res/mipmap-xhdpi/ic_launcher_round.png?raw=true" width="128" alt="Meme-ji App Icon">
-</p>
-
+  
 <p align="center">
   
   <a href="https://f-droid.org/packages/com.elejar.memeji/">
@@ -12,7 +10,7 @@
   </a>
 
   <a href="https://github.com/ele-jar/Meme-ji/releases/latest">
-    <img alt="Get it on GitHub" src="https://img.shields.io/github/v/release/ele-jar/Meme-ji?display_name=tag&logo=github&label=GitHub%20Release" height="80">
+    <img alt="Get it on GitHub" src="https://img.shields.io/github/v/release/ele-jar/Meme-ji?display_name=tag&logo=github&label=GitHub%20Release" height="50">
   </a>
 </p>
 
