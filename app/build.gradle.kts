@@ -8,7 +8,6 @@ plugins {
     alias(libs.plugins.androidx.navigation.safeargs.kotlin)
 }
 
-
 android {
     namespace = "com.elejar.memeji"
     compileSdk = 34
@@ -47,7 +46,6 @@ android {
         }
     }
 
-
     buildTypes {
         release {
             isMinifyEnabled = true
@@ -77,8 +75,12 @@ android {
         buildConfig = true
     }
 
+    // Explicitly add Safe Args generated source directories
+    sourceSets.configureEach {
+        java.srcDirs("build/generated/source/navigation-args/${name}/java")
+        kotlin.srcDirs("build/generated/source/navigation-args/${name}/kotlin")
+    }
 }
-
 
 dependencies {
     implementation(libs.androidx.core.ktx)
