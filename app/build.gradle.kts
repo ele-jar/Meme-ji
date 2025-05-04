@@ -4,29 +4,26 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     id("kotlin-parcelize")
-    // Apply Kapt FIRST
     id("org.jetbrains.kotlin.kapt")
-    // Apply Safe Args AFTER Kapt
     alias(libs.plugins.androidx.navigation.safeargs.kotlin)
 }
 
 
 android {
-    namespace = "com.elejar.memeji" // Ensure this is correct
+    namespace = "com.elejar.memeji"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.elejar.memeji" // Ensure this is correct
+        applicationId = "com.elejar.memeji"
         minSdk = 24
         targetSdk = 34
         versionCode = 1
-        versionName = "1.0.0" // Use v1.0.0 as requested
+        versionName = "1.0.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary = true
         }
-        // Dynamic archivesBaseName based on versionName
         setProperty("archivesBaseName", "Meme-ji-v${defaultConfig.versionName}")
     }
 
@@ -46,9 +43,6 @@ android {
                 this.storePassword = storePassword
                 this.keyAlias = keyAlias
                 this.keyPassword = keyPassword
-                println(">>> Release signing config fully applied from environment/properties.")
-            } else {
-                println("!!! Release signing config incomplete or keystore file not found at '$storeFilePath'. Build might fail or use debug signing.")
             }
         }
     }
@@ -63,16 +57,10 @@ android {
             )
             if (signingConfigs.getByName("release").storeFile?.exists() == true) {
                  signingConfig = signingConfigs.getByName("release")
-                 println(">>> Applying release signing config to release build type.")
-            } else {
-                 println("!!! WARNING: Not applying signing config to release build type due to missing information.")
-                 // Keep building unsigned if config is missing in CI
             }
         }
         debug {
              isMinifyEnabled = false
-             // Ensure debug builds are always debug signed explicitly if necessary
-             // signingConfig = signingConfigs.getByName("debug") // Usually handled automatically
         }
     }
 
@@ -89,12 +77,6 @@ android {
         buildConfig = true
     }
 
-    // Optional: Add packaging options if you encounter specific issues later
-    // packaging {
-    //     resources {
-    //         excludes += "/META-INF/{AL2.0,LGPL2.1}"
-    //     }
-    // }
 }
 
 
@@ -118,8 +100,3 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 }
-
-// Apply Kapt plugin configuration if needed
-// kapt {
-//    correctErrorTypes = true
-// }
