@@ -2,7 +2,7 @@
 
 <p align="center">
 
-  <img src="https://github.com/ele-jar/Meme-ji/blob/main/app/src/main/ic_launcher-playstore.png?raw=true" width="128" alt="Meme-ji App Icon">
+  <img src="app/src/main/res/mipmap-xhdpi/ic_launcher_round.png?raw=true" width="128" alt="Meme-ji App Icon">
 </p>
 
 <p align="center">
